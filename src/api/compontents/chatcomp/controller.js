@@ -1,0 +1,1 @@
+//gets all data from model
