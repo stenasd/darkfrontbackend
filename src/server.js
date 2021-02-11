@@ -11,9 +11,13 @@ const io = require('socket.io')(http);
 
 async function modelinit(){
     await models.userModel.sync({ alter: true });
-    await models.transactionRoom.sync({ alter: true });
-    await models.partic.sync({ alter: true });
+    await models.inRoom.sync({ alter: true });
+    await models.chatRoom.sync({ alter: true });
     await models.messages.sync({ alter: true });
+    await models.orders.sync({ alter: true });
+    await models.listings.sync({ alter: true });
+    await models.inListing.sync({ alter: true });
+    await models.products.sync({ alter: true });
 }
 modelinit()
 middelware.initRestMiddleware(app);

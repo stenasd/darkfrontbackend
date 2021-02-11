@@ -19,4 +19,3 @@ exports.creatUser = async function (insertobject) {
     refkey:insertobject.refer, nick:insertobject.nick });
     return user;
 };
-
