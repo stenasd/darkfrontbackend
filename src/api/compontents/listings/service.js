@@ -12,6 +12,7 @@ exports.getAllListing = async function () {
 };
 
 exports.getProduct = async function (param) {
+    console.log(param);
     const returnvar = await products.findOne({ where: { id: param } });
     return returnvar;
 };
@@ -27,10 +28,42 @@ exports.getProdcutsInListing = async function (param) {
     const returnvar = await inListing.findAll({ where: { id: param } });
     return returnvar;
 }
-exports.creatListing = async function (insertobject) {
-    console.log(insertobject)
-    const user = await userModel.create({
-        name: insertobject.name, price: insertobject.price, sellerid: insertobject.sellerid, refkey: insertobject.refer, nick: insertobject.nick
+exports.creatInListing = async function (pID, lID) {
+    const list = await inListing.create({
+        productid: pID, listingid: lID
     });
-    return user;
+    return list
+}
+exports.creatListing = async function (insertobject) {
+    //add inListing
+    //add listings
+    const list = await listings.create({
+        name: insertobject.name, sellerid: insertobject.sellerid, text: insertobject.text
+    });
+    return list;
 };
+exports.creatProduct = async function (prod) {
+    const product = await products.create({
+        sellerid: prod.sID, name: prod.name, price: prod.price, image: prod.image
+    });
+    return product
+}
+exports.creatOrder = async function (order) {
+    const returnorder = await order.create({
+        roomid: order.roomid, userid: order.userid, sellerid: order.sellerid,
+        productid: order.productid, quant: order.quant
+    });
+    return returnorder
+}
+exports.getOrderUser = async function (param) {
+    console.log(param);
+    const returnvar = await products.findOne({ where: { userid: param } });
+    return returnvar;
+};
+exports.getOrderSeller = async function (param) {
+    console.log(param);
+    const returnvar = await products.findOne({ where: { sellerid: param } });
+    return returnvar;
+};
+
+// roomid:prod.roomid,userid:prod.userid,sellerid:prod.sellerid,productid:prod.productid,quant:prod.quant

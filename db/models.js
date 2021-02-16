@@ -45,31 +45,13 @@ const inRoom = sequelize.define('inRoom', {
         primaryKey: true
     },
     inroom: {
-        type: DataTypes.INTEGER,
-    },
-}, {
-
-});
-exports.inRoom = inRoom;
-const chatRoom = sequelize.define('chatRoom', {
-    // Model attributes are defined here
-    id: {
-        type: DataTypes.INTEGER,
-        autoIncrement: true,
-        primaryKey: true
-    },
-    orderid: {
-        type: DataTypes.INTEGER,
-    },
-    seller: {
-        type: DataTypes.INTEGER,
-    },
-    titel: {
         type: DataTypes.STRING,
     },
 }, {
 
 });
+exports.inRoom = inRoom;
+
 exports.chatRoom = chatRoom;
 const messages = sequelize.define('messages', {
     // Model attributes are defined here
@@ -120,7 +102,7 @@ const orders = sequelize.define('orders', {
         primaryKey: true
     },
     roomid: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING,
     },
     userid: {
         type: DataTypes.INTEGER,
@@ -131,7 +113,9 @@ const orders = sequelize.define('orders', {
     productid: {
         type: DataTypes.INTEGER,
     },
-
+    quant:{
+        type: DataTypes.INTEGER
+    },
 }, {
 
 });
@@ -152,6 +136,9 @@ const products = sequelize.define('products', {
     price: {
         type: DataTypes.STRING,
     },
+    image:{
+        type:DataTypes.STRING
+    }
 }, {
 
 });
@@ -170,6 +157,12 @@ const listings = sequelize.define('listings', {
     name: {
         type: DataTypes.STRING,
     },
+    text:{
+        type:DataTypes.STRING,
+    },
+    image:{
+        type:DataTypes.STRING
+    }
 }, {
 });
 exports.listings = listings

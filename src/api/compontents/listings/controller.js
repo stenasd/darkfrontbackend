@@ -1,29 +1,50 @@
 const service = require('./service');
 
 exports.getAllListings = async function () {
-    let listing =  await service.getAllListing()
-    let list = listing.map(async function(param) {
-        console.log("map param");
-        console.log(param);
+    let listing = await service.getAllListing()
+
+    return Promise.all(listing.map(async function (param) {
         let a = await getproducts(param)
-        return a
-    })
-    return listing
+        console.log(param);
+        console.log(a);
+        return { data: [param, a] }
+    }))
 }
-async function getproducts(param){
+async function getproducts(param) {
     let products = await service.getProdcutsInListing(param.id)
-    let prod = products.map(async function(param) {
+    return Promise.all(products.map(async function (param) {
+        console.log("poduct");
         let prod = await service.getProduct(param.productid)
         return prod
-    })
-    return prod
+    }))
 }
 exports.getproduct = async function (id) {
-    return await service.getAllListing(id)
+    return await service.getProduct(id)
 }
 exports.creatListing = async function (insertobject) {
-    console.log(insertobject)
-    const user = await userModel.create({ name:insertobject.sellerid, pass:insertobject.pass,
+    //verify seller
+    //service.creatInListing() 
+    let a = await service.creatListing(insertobject)
+    console.log("finished listing");
+    let prodarra = insertobject.products
+    prodarra.forEach(element => {
+        console.log(element + " " + a.id);
+        service.creatInListing(element, a.id)
     });
-    return user;
 };
+exports.creatProduct = async function (prod, senderID) {
+
+    let object = { sID: 1, name: prod.name, price: prod.price, image: prod.image }
+    return await service.creatProduct(object)
+}
+
+exports.creatOrder = async function (order) {
+    
+    let chatroom = uuidv4();
+    let product = await service.getProduct(id)
+    let obj = {
+        roomid: chatroom, userid: 420, sellerid: product.sellerid,
+        productid: order.productid, quant: order.quant
+    }
+    service.creatOrder(obj)
+}
