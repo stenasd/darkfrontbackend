@@ -1,5 +1,5 @@
 const service = require('./service');
-
+const { v4: uuidv4 } = require('uuid');
 exports.getAllListings = async function () {
     let listing = await service.getAllListing()
 
@@ -39,12 +39,17 @@ exports.creatProduct = async function (prod, senderID) {
 }
 
 exports.creatOrder = async function (order) {
-    
+    let userid = 1
+    //verify seller
+    //add buyer and seller to order chatroom
     let chatroom = uuidv4();
-    let product = await service.getProduct(id)
+    let product = await service.getProduct(order.productid)
     let obj = {
-        roomid: chatroom, userid: 420, sellerid: product.sellerid,
+        roomid: chatroom, userid: userid, sellerid: product.sellerid,
         productid: order.productid, quant: order.quant
     }
+    
     service.creatOrder(obj)
+    let send = {userid:userid,roomid:chatroom,sellerid:product.sellerid}
+    service.addInRoom(send)
 }

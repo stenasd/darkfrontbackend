@@ -35,15 +35,7 @@ exports.routes = async function route(app) {
         }
         res.status(400)
     });
-    
 };
-
-
-//create listing
-//get listing
-//get users listings with products solverd in controller products
-//click to buy and it creates a room for seller and buyer and puts both inroom seller got seller as id
-
-
 //listing quarry {"name":"testname","text":"asdasd","sellerid":"1","products":[2,1]}
 //product {"name":"testname","price":69,"image":"testimage"}
+//order {"productid":"1","quant":"2"}

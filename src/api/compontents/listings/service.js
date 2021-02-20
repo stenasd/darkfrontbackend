@@ -1,6 +1,6 @@
 const models = require('../../../../db/models');
 
-const chatRoom = models.chatRoom;
+const inRoom = models.inRoom;
 const orders = models.orders;
 const products = models.products;
 const listings = models.listings;
@@ -49,7 +49,7 @@ exports.creatProduct = async function (prod) {
     return product
 }
 exports.creatOrder = async function (order) {
-    const returnorder = await order.create({
+    const returnorder = await orders.create({
         roomid: order.roomid, userid: order.userid, sellerid: order.sellerid,
         productid: order.productid, quant: order.quant
     });
@@ -66,4 +66,10 @@ exports.getOrderSeller = async function (param) {
     return returnvar;
 };
 
+exports.addInRoom = async function (order) {
+    const returnorder = await inRoom.create({
+        roomid: order.roomid, userid: order.userid,sellerid:order.sellerid
+    });
+    return returnorder
+}
 // roomid:prod.roomid,userid:prod.userid,sellerid:prod.sellerid,productid:prod.productid,quant:prod.quant

@@ -40,19 +40,20 @@ exports.userModel = userModel;
 
 const inRoom = sequelize.define('inRoom', {
     // Model attributes are defined here
+    roomid: {
+        type: DataTypes.STRING,
+    },
     userid: {
         type: DataTypes.INTEGER,
-        primaryKey: true
     },
-    inroom: {
-        type: DataTypes.STRING,
+    sellerid: {
+        type: DataTypes.INTEGER,
     },
 }, {
 
 });
 exports.inRoom = inRoom;
 
-exports.chatRoom = chatRoom;
 const messages = sequelize.define('messages', {
     // Model attributes are defined here
     id: {
