@@ -1,11 +1,14 @@
 const service = require('./service');
-
+const verifyer = require('../../securityUtil')
 exports.getchatHistory = async function (id) {
     return await service.getAllMsgInRoom(id)
 }
 
 exports.getChatRoom = async function (id) {
     return await service.getChatroom(id)
+}
+exports.getSellerRoom = async function (id) {
+    return await service.getSellerroom(id)
 }
 exports.saveMessage = async function(obj){
     return await service.saveMessage(obj)
@@ -19,4 +22,54 @@ exports.verifySender = async function(senderID,roomid){
         }
     });
     return inroom
+    
+}
+exports.saveMessage = async function(obj){
+    return await service.saveMessage(obj)
+}
+exports.getOrderWhereRoomID = async function(roomid){
+    return await service.getOrderWhereRoomID(obj)
+}
+exports.verifysession = async function(obj){
+    return await verifyer.varifySess(obj)
+}
+exports.getAllRoomsWhereUserId = async function(obj){
+    return await service.getAllRoomsWhereUserId(obj)
+}
+
+exports.getChats = async function(obj){
+    let allrooms = await service.getAllRoomsWhereUserId(obj)
+
+    return await Promise.all(allrooms.map(async function (param) {
+        let order = await service.getOrderWhereRoomID(param.roomid)
+        let chathistory = await service.getAllMsgInRoom(param.roomid)
+        let product = await service.getproduct(order.productid)
+        let chatHistory = Promise.all(chathistory.map(async function (param1) { 
+            let user = await service.getRawUserId(param1.userid)
+            let returnmessage = {
+                text:param1.text,
+                image:param1.image,
+                name:user.nick,
+                date:param1.createdAt
+            }
+
+            return returnmessage
+        }))
+     
+        let seller = await service.getRawUserId(order.sellerid)
+        let buyer = service.getRawUserId(param.userid)
+        let returnobject = {
+            productName:product.name,
+            productPrice:product.price,
+            productImage:product.image,
+            messages:await chatHistory,
+            orderQuant:order.quant,
+            orderID:order.id,    
+            seller:seller.nick,
+            buyer:buyer.nick
+
+        } 
+        console.log(returnobject);
+        return returnobject
+    }))
 }

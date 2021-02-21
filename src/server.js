@@ -9,7 +9,7 @@ const app = express();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
 
-async function modelinit(){
+async function modelinit() {
     await models.userModel.sync({ alter: true });
     await models.inRoom.sync({ alter: true });
     await models.messages.sync({ alter: true });
@@ -17,11 +17,12 @@ async function modelinit(){
     await models.listings.sync({ alter: true });
     await models.inListing.sync({ alter: true });
     await models.products.sync({ alter: true });
+    await models.refkey.sync({ alter: true });
 }
 modelinit()
-middelware.initRestMiddleware(app);
+middelware.initRestMiddleware(app,io);
 dbstart.start();
 console.log("testrun");
-routes.initRestRoutes(app,io);
+routes.initRestRoutes(app, io);
 
 exports.app = http

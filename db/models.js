@@ -62,7 +62,7 @@ const messages = sequelize.define('messages', {
         primaryKey: true
     },
     roomid: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING,
     },
     userid: {
         type: DataTypes.INTEGER,
@@ -88,7 +88,7 @@ const refkey = sequelize.define('refkey', {
         primaryKey: true
     },
     referalcode: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING,
     }
 }, {
 });
@@ -114,7 +114,7 @@ const orders = sequelize.define('orders', {
     productid: {
         type: DataTypes.INTEGER,
     },
-    quant:{
+    quant: {
         type: DataTypes.INTEGER
     },
 }, {
@@ -137,8 +137,8 @@ const products = sequelize.define('products', {
     price: {
         type: DataTypes.STRING,
     },
-    image:{
-        type:DataTypes.STRING
+    image: {
+        type: DataTypes.STRING
     }
 }, {
 
@@ -158,11 +158,11 @@ const listings = sequelize.define('listings', {
     name: {
         type: DataTypes.STRING,
     },
-    text:{
-        type:DataTypes.STRING,
+    text: {
+        type: DataTypes.STRING,
     },
-    image:{
-        type:DataTypes.STRING
+    image: {
+        type: DataTypes.STRING
     }
 }, {
 });
@@ -171,7 +171,7 @@ const inListing = sequelize.define('inListing', {
     // Model attributes are defined here
     productid: {
         type: DataTypes.INTEGER,
-        
+
     },
     listingid: {
         type: DataTypes.INTEGER,
@@ -181,3 +181,12 @@ const inListing = sequelize.define('inListing', {
 });
 exports.inListing = inListing
 
+const sessionstore = sequelize.define('Session', {
+    'session_id': {
+        type: DataTypes.STRING(32),
+        primaryKey: true,
+    },
+    expires: DataTypes.DATE,
+    data: DataTypes.TEXT,
+});
+exports.sessionStore = sessionstore

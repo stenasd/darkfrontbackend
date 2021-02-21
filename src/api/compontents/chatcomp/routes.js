@@ -1,15 +1,9 @@
-//api routs for chat history
-
-//user got a socket thats saved and backend keeps track on all messages and send it to correct
-
-//get roomid and and userid from socket reciver and save messages 
-
-// check if client can accses the room it sends in
+//verify that sender is can accses and is vail user
 const controller = require('./controller');
-
+const verifyer = require('../../securityUtil')
 exports.chat = async function chat(app, io) {
   //todo make checker so only the ones thats in it can accses it
-  app.get("/chathistory", (req, res) => {
+  app.get("/chathistory", async function (req, res)  {
 
     //res.status(200).json(controller.getchathistory(req.body.roomid));
     
@@ -36,23 +30,21 @@ exports.chat = async function chat(app, io) {
     }
     res.status(200).json(samplejson);
   });
-  io.on('connection', (socket) => {
 
+  app.get("/activeRooms", async function (req, res)   {
+    let getallroomns = await controller.getChats(req.user.id)
+    res.status(200).json(getallroomns);
+  });
+  
+  io.on('connection', (socket) => {
     //get rooms 
-    socket.on('chat message', (msg) => {
+    socket.on('chat message', async function(msg){
       //todo check for validity
       //broadcast to right room
-      let samplejson = {
-              
-        id:"1",
-        roomid:"1",
-        userid:"2",
-        text:msg,
-        image:null
-        }
-      
-      console.log('message: ' + msg);
+      let sessobj = await controller.verifysession(msg[0])
+      let userid = JSON.parse(sessobj.data)
       socket.broadcast.emit('msg', samplejson);
     });
   });
 };
+

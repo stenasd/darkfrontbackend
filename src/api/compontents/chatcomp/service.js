@@ -1,10 +1,10 @@
 
 const models = require('../../../../db/models');
-const chatRoom = models.chatRoom;
 const messages = models.messages;
 const userModel = models.userModel;
 const inRoom = models.inRoom;
-
+const orders = models.orders;
+const products = models.products
 
 exports.getAllMsgInRoom = async function (roomIdParam) {
     const msg = await messages.findAll({
@@ -13,9 +13,17 @@ exports.getAllMsgInRoom = async function (roomIdParam) {
     return msg;
 };
 exports.getChatroom = async function (idParam) {
-    const chatRoom = await chatRoom.findOne({
+    const chatRoom = await inRoom.findOne({
         where: {
-            id: idParam
+            userid: idParam
+        }
+    });
+    return chatRoom;
+}
+exports.getSellerroom = async function (idParam) {
+    const chatRoom = await inRoom.findOne({
+        where: {
+            sellerid: idParam
         }
     });
     return chatRoom;
@@ -38,3 +46,22 @@ exports.getAllInRoomWhereRoomid = async function (roomIdParam) {
     });
     return room;
 };
+exports.getAllRoomsWhereUserId = async function (userid) {
+    const room = await inRoom.findAll({
+        where: { userid: userid }
+    });
+    return room;
+};
+exports.getOrderWhereRoomID = async function (roomIdParam) {
+    const room = await orders.findOne({
+        where: { roomid: roomIdParam }
+    });
+    return room;
+};
+exports.getproduct = async function (productid) {
+    const product = await products.findOne({
+        where: { id: productid }
+    });
+    return product;
+};
+

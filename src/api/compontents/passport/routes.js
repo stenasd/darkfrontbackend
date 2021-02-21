@@ -1,7 +1,7 @@
 var passport = require('passport');
 var Strategy = require('passport-local').Strategy;
 const controller = require('./controller');
-const { json } = require('body-parser');
+const verifyer = require('../../securityUtil')
 passport.use(new Strategy(
     function (username, password, cb) {
         controller.findByUsername(username, function (err, user) {
@@ -30,7 +30,7 @@ exports.route = async function route(app) {
     app.post('/logout', function (req, res) {
         console.log("logout");
         req.session.destroy(function (err) {
-            res.redirect('/'); 
+            res.redirect('/');
         });
     });
     app.post('/signup', async function (req, res) {
@@ -45,11 +45,14 @@ exports.route = async function route(app) {
         });
     app.get("/checkAuthentication", (req, res) => {
         if (typeof req.user !== 'undefined') {
-            console.log("auth");
-            res.status(200).json({
+            if (verifyer.veifyUser(req.user.name)) {
+                res.status(200).json({
 
-                authenticated: true,
-            });
+                    authenticated: true,
+                });
+            }
+            console.log(req.sessionID);
+
         }
         else {
             res.status(400).json({
@@ -58,6 +61,25 @@ exports.route = async function route(app) {
         }
 
     });
+    app.get("/getSessionid", (req, res) => {
+        if (typeof req.user !== 'undefined') {
+            if (verifyer.veifyUser(req.user.name)) {
+                res.status(200).json({
+
+                    sessionID: req.sessionID,
+                });
+            }
+            console.log(req.sessionID);
+
+        }
+        else {
+            res.status(400).json({
+                authenticated: false,
+            });
+        }
+
+    });
+
 
 
 

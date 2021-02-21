@@ -2,7 +2,6 @@ const service = require('./service');
 const { v4: uuidv4 } = require('uuid');
 exports.getAllListings = async function () {
     let listing = await service.getAllListing()
-
     return Promise.all(listing.map(async function (param) {
         let a = await getproducts(param)
         console.log(param);
