@@ -4,8 +4,8 @@ exports.getchatHistory = async function (id) {
     return await service.getAllMsgInRoom(id)
 }
 
-exports.getChatRoom = async function (id) {
-    return await service.getChatroom(id)
+exports.getRoomWhereOrderID = async function (id) {
+    return await service.getRoomWhereOrderID(id)
 }
 exports.getSellerRoom = async function (id) {
     return await service.getSellerroom(id)
@@ -31,7 +31,11 @@ exports.getOrderWhereRoomID = async function(roomid){
     return await service.getOrderWhereRoomID(obj)
 }
 exports.verifysession = async function(obj){
-    return await verifyer.varifySess(obj)
+    let a = await verifyer.varifySess(obj)
+    let userid = JSON.parse(a.data)
+    userid = userid.passport.user
+    return await service.getRawUserId(userid)
+    
 }
 exports.getAllRoomsWhereUserId = async function(obj){
     return await service.getAllRoomsWhereUserId(obj)

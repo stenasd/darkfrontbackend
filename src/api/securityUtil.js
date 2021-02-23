@@ -17,6 +17,7 @@ exports.verifyRef = async function (refer) {
     if(refkey){return true}
     return false
 };
+
 exports.varifySess = async function (refer) {
     return await  sessionStore.findOne({ where: { session_id:refer } });
 };

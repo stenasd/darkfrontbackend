@@ -12,10 +12,11 @@ exports.getAllMsgInRoom = async function (roomIdParam) {
     });
     return msg;
 };
-exports.getChatroom = async function (idParam) {
-    const chatRoom = await inRoom.findOne({
+exports.getRoomWhereOrderID = async function (idParam) {
+    console.log("service"+idParam)
+    const chatRoom = await orders.findOne({
         where: {
-            userid: idParam
+            id: idParam
         }
     });
     return chatRoom;
