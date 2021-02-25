@@ -136,10 +136,8 @@ const products = sequelize.define('products', {
     },
     price: {
         type: DataTypes.STRING,
-    },
-    image: {
-        type: DataTypes.STRING
     }
+
 }, {
 
 });

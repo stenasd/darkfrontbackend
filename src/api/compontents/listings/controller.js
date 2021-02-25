@@ -1,5 +1,6 @@
 const service = require('./service');
 const { v4: uuidv4 } = require('uuid');
+const { products } = require('../../../../db/models');
 exports.getAllListings = async function () {
     let listing = await service.getAllListing()
     return Promise.all(listing.map(async function (param) {
@@ -20,18 +21,27 @@ async function getproducts(param) {
 exports.getproduct = async function (id) {
     return await service.getProduct(id)
 }
-exports.creatListing = async function (insertobject) {
+exports.creatListing = async function (insertobject, user, productParam) {
     //verify seller
     //service.creatInListing() 
-    let a = await service.creatListing(insertobject)
-    console.log("finished listing");
-    let prodarra = insertobject.products
-    prodarra.forEach(element => {
-        console.log(element + " " + a.id);
-        service.creatInListing(element, a.id)
+
+    let data = { name: insertobject.titel, sellerid: user.id, price: insertobject.price, image: insertobject.image ,text:insertobject.text}
+    let createdListing = await service.creatListing(data)
+    console.log(createdListing)
+    if (!createdListing) { return false }
+    console.log(productParam)
+    const prodarra = await Promise.all(productParam.map(async (prod) => {
+        let object = { sID: user.id, name: prod.text, price: prod.price }
+        return await service.creatProduct(object)
+    }));
+    prodarra.forEach(prod => {
+        service.creatInListing(prod.id, createdListing.id)
     });
+    console.log("finished listing");
+    return true
+
 };
-exports.creatProduct = async function (prod, senderID) {
+exports.creatProduct = async function (prod, user) {
 
     let object = { sID: 1, name: prod.name, price: prod.price, image: prod.image }
     return await service.creatProduct(object)
@@ -47,8 +57,8 @@ exports.creatOrder = async function (order) {
         roomid: chatroom, userid: userid, sellerid: product.sellerid,
         productid: order.productid, quant: order.quant
     }
-    
+
     service.creatOrder(obj)
-    let send = {userid:userid,roomid:chatroom,sellerid:product.sellerid}
+    let send = { userid: userid, roomid: chatroom, sellerid: product.sellerid }
     service.addInRoom(send)
 }
