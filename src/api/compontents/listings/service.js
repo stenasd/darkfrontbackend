@@ -1,13 +1,17 @@
 const models = require('../../../../db/models');
-
+const userModel = models.userModel;
 const inRoom = models.inRoom;
 const orders = models.orders;
 const products = models.products;
 const listings = models.listings;
 const inListing = models.inListing;
 
+exports.getRawUserId = async function (idParam) {
+    const user = await userModel.findOne({ where: { id: idParam } });
+    return user;
+};
 exports.getAllListing = async function () {
-    const returnvar = await listings.findAll();
+    const returnvar = await listings.findAll({ limit: 10, order: [['updatedAt', 'DESC']]});
     return returnvar;
 };
 

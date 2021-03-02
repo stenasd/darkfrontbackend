@@ -1,14 +1,22 @@
 const service = require('./service');
 const { v4: uuidv4 } = require('uuid');
-const { products } = require('../../../../db/models');
 exports.getAllListings = async function () {
+    //return cheapest product price and name in sek and btc with image,sellernick
     let listing = await service.getAllListing()
     return Promise.all(listing.map(async function (param) {
         let a = await getproducts(param)
-        console.log(param);
-        console.log(a);
-        return { data: [param, a] }
+        let prices = a.map(x => x.price)
+        let sellernick = service.getRawUserId(param.sellerid)
+        prices = prices.sort(function(a, b){return a-b});
+        console.log(prices[0]);
+        param.prices = prices[0]
+        console.log(param)
+        let returnparam = {id:param.id,name:param.name,priceBTC:prices[0],sellernick:sellernick.name,image:param.image,titel:param.name}
+        return returnparam 
     }))
+}
+exports.getSearchTitleAndProduct = async function () {
+    //searches titles productname disc and text
 }
 async function getproducts(param) {
     let products = await service.getProdcutsInListing(param.id)
@@ -23,8 +31,7 @@ exports.getproduct = async function (id) {
 }
 exports.creatListing = async function (insertobject, user, productParam) {
     //verify seller
-    //service.creatInListing() 
-
+    //service.creatInListing()
     let data = { name: insertobject.titel, sellerid: user.id, price: insertobject.price, image: insertobject.image ,text:insertobject.text}
     let createdListing = await service.creatListing(data)
     console.log(createdListing)

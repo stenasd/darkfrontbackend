@@ -1,10 +1,3 @@
-//api routs for chat history
-
-//user got a socket thats saved and backend keeps track on all messages and send it to correct
-
-//get roomid and and userid from socket reciver and save messages 
-
-// check if client can accses the room it sends in
 const controller = require('./controller');
 const verifyer = require('../../securityUtil')
 exports.routes = async function route(app) {
@@ -38,9 +31,3 @@ exports.routes = async function route(app) {
         res.status(400)
     });
 };
-
-//listing {"sendobject":{"creatProduct":[{"text":"555","price":"666"},{"text":"555","price":"666"},{"text":"555","price":"666"},{"text":"555","price":"666"},{"text":"555","price":"666"}],"creatListing":{"titel":"777","text":"888"}}}
-//order {"productid":"1","quant":"2"}
-//listing quarry {"name":"testname","text":"asdasd","sellerid":"1","products":[2,1]}
-//product {"name":"testname","price":69,"image":"testimage"}
-//order {"productid":"1","quant":"2"}
