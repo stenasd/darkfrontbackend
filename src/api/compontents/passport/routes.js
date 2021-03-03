@@ -36,6 +36,7 @@ exports.route = async function route(app) {
     app.post('/signup', async function (req, res) {
         console.log(req.body.signupobj);
         let signres = await controller.signup(req.body.signupobj)
+        console.log(signres)
         res.status(200).json(signres);
     });
     app.post('/login',

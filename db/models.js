@@ -43,6 +43,9 @@ const inRoom = sequelize.define('inRoom', {
     roomid: {
         type: DataTypes.STRING,
     },
+    orderid: {
+        type: DataTypes.STRING,
+    },
     userid: {
         type: DataTypes.INTEGER,
     },
@@ -110,13 +113,7 @@ const orders = sequelize.define('orders', {
     },
     sellerid: {
         type: DataTypes.INTEGER,
-    },
-    productid: {
-        type: DataTypes.INTEGER,
-    },
-    quant: {
-        type: DataTypes.INTEGER
-    },
+    }
 }, {
 
 });
@@ -188,3 +185,19 @@ const sessionstore = sequelize.define('Session', {
     data: DataTypes.TEXT,
 });
 exports.sessionStore = sessionstore
+
+const prodInOrder = sequelize.define('prodInOrder', {
+    // Model attributes are defined here
+    orderid: {
+        type: DataTypes.INTEGER,
+    }, 
+    productid: {
+        type: DataTypes.INTEGER,
+    },
+    quant: {
+        type: DataTypes.INTEGER
+    },
+}, {
+
+});
+exports.prodInOrder = prodInOrder

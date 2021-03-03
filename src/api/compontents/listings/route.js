@@ -7,15 +7,32 @@
 // check if client can accses the room it sends in
 const controller = require('./controller');
 const verifyer = require('../../securityUtil')
+const path = require('path');
+const Resize = require('./Resize');
+const multer = require('multer');
+const upload = multer({
+    limits: {
+        fileSize: 4 * 1024 * 1024,
+    }
+});
+
+
 exports.routes = async function route(app) {
-    app.post('/creatListing', async function (req, res) {
+    app.post('/creatListing', upload.single('file'), async function (req, res) {
         if (!verifyer.verifyRef(req.user.refkey)) {
             res.status(400)
             return
         }
-        console.log("create listing");
-
-        if (controller.creatListing(req.body.creatListing, req.user,req.body.creatProduct)) {
+        const imagePath = path.join('./images');
+        const fileUpload = new Resize(imagePath);
+        if (!req.file) {
+            console.log("image upload error")
+            res.status(401).json({ error: 'Please provide an image' });
+        }
+        console.log("image upload")
+        const filename = await fileUpload.save(req.file.buffer);
+        console.log(filename)
+        if (controller.creatListing(JSON.parse(req.body.creatListing), req.user, JSON.parse(req.body.creatProduct), await filename)) {
         }
         res.status(400)
     });
@@ -25,14 +42,19 @@ exports.routes = async function route(app) {
         //console.log(resjson);
         res.status(200).json(resjson);
     });
+    app.get("/getListing", async function (req, res) {
+        let resjson = await controller.getListing(req.query.listingID)
+        res.status(200).json(resjson);
+    });
     app.post('/addOrder', async function (req, res) {
-        //get seller and price from poductmodel and get userid from req.userid
-        if (verifyer.veifyUser(req.user.name)) {
+        console.log(req.user)
+        if (!verifyer.veifyUser(req.user.name)) {
+            console.log(verifyer.veifyUser(req.user.name));
             res.status(400)
             return
         }
         console.log("create listing");
-        if (controller.creatOrder(req.body)) {
+        if (controller.creatOrder(req.body,req.user)) {
             res.status(200)
         }
         res.status(400)

@@ -3,39 +3,19 @@ const controller = require('./controller');
 const verifyer = require('../../securityUtil')
 exports.chat = async function chat(app, io) {
   //todo make checker so only the ones thats in it can accses it
-  app.get("/chathistory", async function (req, res) {
-
-    //res.status(200).json(controller.getchathistory(req.body.roomid));
-
-    let samplejson = {
-      data: [{
-        id: "1",
-        roomid: "1",
-        userid: "2",
-        text: "hello history",
-        image: null
-      }, {
-        id: "1",
-        roomid: "1",
-        userid: "2",
-        text: "hello history",
-        image: null
-      }, {
-        id: "1",
-        roomid: "1",
-        userid: "2",
-        text: "hello history",
-        image: null
-      },]
-    }
-    res.status(200).json(samplejson);
-  });
 
   app.get("/activeRooms", async function (req, res) {
+    console.log("getallrooms");
     let getallroomns = await controller.getChats(req.user.id)
+    console.log(getallroomns)
     res.status(200).json(getallroomns);
   });
-
+  app.get("/activeRoomsSeller", async function (req, res) {
+    console.log("getallrooms");
+    let getallroomns = await controller.getChatsSel(req.user.id)
+    console.log(getallroomns)
+    res.status(200).json(getallroomns);
+  });
   io.on('connection', (socket) => {
     //socket on login to get subscribed rooms
     console.log("connection")
@@ -49,7 +29,6 @@ exports.chat = async function chat(app, io) {
       let chatroom = await controller.getRoomWhereOrderID(msg[1].orderid)
       console.log(chatroom)
       console.log(sessobj)
-
       let returnmessage = {
         text: msg[1].text,
         image: "asd",

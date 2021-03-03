@@ -7,7 +7,8 @@ const { Sequelize } = require('sequelize');
 const sequelize = new Sequelize('main', 'root', 'root', {
   host: 'localhost',
   dialect: 'mysql',
-  logging: msg => console.log(msg.magenta)
+  logging: false
+  //logging: msg => console.log(msg.magenta)
 });
 
 exports.start = async function mysqlConnection() {

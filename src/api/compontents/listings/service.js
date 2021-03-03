@@ -5,13 +5,14 @@ const orders = models.orders;
 const products = models.products;
 const listings = models.listings;
 const inListing = models.inListing;
+const prodInOrder = models.prodInOrder;
 
 exports.getRawUserId = async function (idParam) {
     const user = await userModel.findOne({ where: { id: idParam } });
     return user;
 };
 exports.getAllListing = async function () {
-    const returnvar = await listings.findAll({ limit: 10, order: [['updatedAt', 'DESC']]});
+    const returnvar = await listings.findAll({ limit: 100, order: [['updatedAt', 'DESC']] });
     return returnvar;
 };
 
@@ -29,7 +30,7 @@ exports.getOrdersWhereUserId = async function (param) {
 
 //to get products and prices for listing
 exports.getProdcutsInListing = async function (param) {
-    const returnvar = await inListing.findAll({ where: { id: param } });
+    const returnvar = await inListing.findAll({ where: { listingid: param } });
     return returnvar;
 }
 exports.creatInListing = async function (pID, lID) {
@@ -41,8 +42,9 @@ exports.creatInListing = async function (pID, lID) {
 exports.creatListing = async function (insertobject) {
     //add inListing
     //add listings
+    console.log(insertobject)
     const list = await listings.create({
-        name: insertobject.name, sellerid: insertobject.sellerid, text: insertobject.text
+        name: insertobject.name, sellerid: insertobject.sellerid, text: insertobject.text, image: insertobject.image
     });
     return list;
 };
@@ -70,9 +72,20 @@ exports.getOrderSeller = async function (param) {
     return returnvar;
 };
 
-exports.addInRoom = async function (order) {
+
+exports.getListingFromId = async function (param) {
+    const returnvar = await listings.findOne({ where: { id: param } })
+    return returnvar;
+}
+exports.addProductInOrder = async function (order) {
+    const returnorder = await prodInOrder.create({
+        orderid: order.orderid, productid: order.productid, quant:order.quant
+    });
+    return returnorder
+}
+exports.addInRoom= async function (param) {
     const returnorder = await inRoom.create({
-        roomid: order.roomid, userid: order.userid,sellerid:order.sellerid
+        roomid:param.roomid,sellerid:param.sellerid,userid:param.userid,orderid:param.orderid
     });
     return returnorder
 }

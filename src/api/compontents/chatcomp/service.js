@@ -5,7 +5,7 @@ const userModel = models.userModel;
 const inRoom = models.inRoom;
 const orders = models.orders;
 const products = models.products
-
+const prodInOrder = models.prodInOrder
 exports.getAllMsgInRoom = async function (roomIdParam) {
     const msg = await messages.findAll({
         where: { roomid: roomIdParam }
@@ -53,6 +53,12 @@ exports.getAllRoomsWhereUserId = async function (userid) {
     });
     return room;
 };
+exports.getAllRoomsWhereSellerId = async function (userid) {
+    const room = await inRoom.findAll({
+        where: { sellerid: userid }
+    });
+    return room;
+};
 exports.getOrderWhereRoomID = async function (roomIdParam) {
     const room = await orders.findOne({
         where: { roomid: roomIdParam }
@@ -60,9 +66,18 @@ exports.getOrderWhereRoomID = async function (roomIdParam) {
     return room;
 };
 exports.getproduct = async function (productid) {
+    console.log(productid)
     const product = await products.findOne({
         where: { id: productid }
     });
     return product;
+};
+
+exports.getProductsInOrder = async function (orderid) {
+    console.log(orderid)
+    const order = await prodInOrder.findAll({
+        where: { orderid: orderid }
+    });
+    return order;
 };
 

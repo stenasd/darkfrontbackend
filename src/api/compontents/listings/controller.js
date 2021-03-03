@@ -7,12 +7,12 @@ exports.getAllListings = async function () {
         let a = await getproducts(param)
         let prices = a.map(x => x.price)
         let sellernick = service.getRawUserId(param.sellerid)
-        prices = prices.sort(function(a, b){return a-b});
+        prices = prices.sort(function (a, b) { return a - b });
         console.log(prices[0]);
         param.prices = prices[0]
         console.log(param)
-        let returnparam = {id:param.id,name:param.name,priceBTC:prices[0],sellernick:sellernick.name,image:param.image,titel:param.name}
-        return returnparam 
+        let returnparam = { id: param.id, name: param.name, priceBTC: prices[0], sellernick: sellernick.name, image: param.image, titel: param.name }
+        return returnparam
     }))
 }
 exports.getSearchTitleAndProduct = async function () {
@@ -29,12 +29,19 @@ async function getproducts(param) {
 exports.getproduct = async function (id) {
     return await service.getProduct(id)
 }
-exports.creatListing = async function (insertobject, user, productParam) {
+exports.getListing = async function (id) {
+    let listing = await service.getListingFromId(id)
+    let a = await getproducts(listing)
+    let sellernick = service.getRawUserId(listing.sellerid)
+    let returnparam = { id: listing.id, text: listing.text, sellernick: sellernick.name, image: listing.image, titel: listing.name, products: a }
+    return returnparam
+}
+exports.creatListing = async function (insertobject, user, productParam, imagePath) {
     //verify seller
     //service.creatInListing()
-    let data = { name: insertobject.titel, sellerid: user.id, price: insertobject.price, image: insertobject.image ,text:insertobject.text}
+    console.log(imagePath)
+    let data = { name: insertobject.titel, sellerid: user.id, image: imagePath, text: insertobject.text }
     let createdListing = await service.creatListing(data)
-    console.log(createdListing)
     if (!createdListing) { return false }
     console.log(productParam)
     const prodarra = await Promise.all(productParam.map(async (prod) => {
@@ -46,26 +53,35 @@ exports.creatListing = async function (insertobject, user, productParam) {
     });
     console.log("finished listing");
     return true
-
 };
 exports.creatProduct = async function (prod, user) {
 
-    let object = { sID: 1, name: prod.name, price: prod.price, image: prod.image }
+    let object = { sID: user.id, name: prod.name, price: prod.price, image: prod.image }
     return await service.creatProduct(object)
 }
 
-exports.creatOrder = async function (order) {
-    let userid = 1
-    //verify seller
-    //add buyer and seller to order chatroom
+exports.creatOrder = async function (param, user) {
     let chatroom = uuidv4();
-    let product = await service.getProduct(order.productid)
-    let obj = {
-        roomid: chatroom, userid: userid, sellerid: product.sellerid,
-        productid: order.productid, quant: order.quant
-    }
+    let product = await service.getProduct(param[0].productid)
 
-    service.creatOrder(obj)
-    let send = { userid: userid, roomid: chatroom, sellerid: product.sellerid }
-    service.addInRoom(send)
+    let obj = {
+        roomid: chatroom, userid: user.id, sellerid: product.sellerid
+    }
+    let returnOrder = await service.creatOrder(obj)
+    console.log(returnOrder)
+    let addinroom = await service.addInRoom({
+        roomid: chatroom, sellerid: product.sellerid, userid: user.id,orderid:returnOrder.id
+    })
+    let addinroomSeller = await service.addInRoom({
+        roomid: chatroom, sellerid: product.sellerid, userid: user.id,orderid:returnOrder.id
+    })
+    param.forEach(async (order) => {
+        //adds addproductinorder tanble
+        let prodInorder = {
+            orderid: returnOrder.id, productid: order.productid, quant: order.quant
+        }
+        let a = await service.addProductInOrder(prodInorder)
+    });
+
 }
+

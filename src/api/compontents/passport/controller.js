@@ -25,34 +25,35 @@ exports.getUserFromId = async function (id) {
 exports.signup = async function (obj) {
     let dupname = await findDuplicateUse(obj.name)
     let dupnick = await findDuplicateNick(obj.nick)
-    let resobj = { duplname: dupname, duplnick: dupnick,succ:false}
+    let resobj = { duplname: dupname, duplnick: dupnick, succ: false }
     console.log(resobj)
     if (dupname) {
-      
+
         return resobj
     }
     if (dupnick) {
-      
+
         return resobj
     }
     let creatuser = await service.creatUser(obj)
-    if(creatuser){
+    if (creatuser) {
         resobj.succ = true
         return resobj
     }
 }
+
 async function findDuplicateUse(user) {
     let username = await service.getRawUserName(user)
     if (username) {
         return true
     }
-    else{return false}
+    else { return false }
 }
 async function findDuplicateNick(nick) {
     let nickname = await service.getRawUserNick(nick).catch(e => { console.log(" ") })
     if (nickname) {
         return true
-    } else{return false}
+    } else { return false }
 }
 
 

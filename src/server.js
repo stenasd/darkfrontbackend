@@ -18,9 +18,10 @@ async function modelinit() {
     await models.inListing.sync({ alter: true });
     await models.products.sync({ alter: true });
     await models.refkey.sync({ alter: true });
+    await models.prodInOrder.sync({alter: true});
 }
 modelinit()
-middelware.initRestMiddleware(app,io);
+middelware.initRestMiddleware(app, io);
 dbstart.start();
 console.log("testrun");
 routes.initRestRoutes(app, io);

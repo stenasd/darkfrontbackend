@@ -1,8 +1,6 @@
 //all middelware in a neat place
 const express = require('express');
 const bodyParser = require('body-parser');
-const path = require('path');
-const cors = require('cors')
 const passport = require('passport');
 const expressSession = require('express-session');
 const SessionStore = require('express-session-sequelize')(expressSession.Store);
@@ -16,14 +14,13 @@ const sequelizeSessionStore = new SessionStore({
 
 
 exports.initRestMiddleware = function initRestMiddleware(app) {
-
+  app.use(express.static('images'));
   app.use(expressSession({
       secret: 'keep it secret, keep it safe.',
       store: sequelizeSessionStore,
       resave: false,
       saveUninitialized: false,
   }));
-  app.use(express.static(path.join(__dirname, 'public')));
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(bodyParser.json());
   app.use(passport.initialize());
