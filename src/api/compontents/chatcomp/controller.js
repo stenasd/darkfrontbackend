@@ -69,17 +69,17 @@ exports.getChats = async function (userid) {
         }))
         let seller = await service.getRawUserId(order.sellerid)
         let buyer = await service.getRawUserId(param.userid)
-        let ordertitle = prodInOrder.map(data=>{
-            return data.productName+" QT: "+data.quant+" Pris: "+data.productPrice
+        let ordertitle = prodInOrder.map(data => {
+            return data.productName + " QT: " + data.quant + " Pris: " + data.productPrice
         })
-        console.log(prodInOrder)
+
         let returnobject = {
             products: await prodInOrder,
             messages: await chatHistory,
             orderID: order.id,
             seller: seller.nick,
             buyer: buyer.nick,
-            title:ordertitle
+            title: ordertitle
         }
         return returnobject
     }))
@@ -113,18 +113,19 @@ exports.getChatsSel = async function (userid) {
         }))
         let seller = await service.getRawUserId(order.sellerid)
         let buyer = await service.getRawUserId(param.userid)
-        let ordertitle = prodInOrder.map(data=>{
-            return data.productName+" QT: "+data.quant+" Pris: "+data.productPrice
+        let ordertitle = prodInOrder.map(data => {
+            return data.productName + " QT: " + data.quant + " Pris: " + data.productPrice
         })
-        console.log(prodInOrder)
         let returnobject = {
             products: await prodInOrder,
             messages: await chatHistory,
             orderID: order.id,
             seller: seller.nick,
             buyer: buyer.nick,
-            title:ordertitle
+            title: ordertitle
         }
         return returnobject
     }))
 }
+
+

@@ -72,9 +72,6 @@ exports.creatOrder = async function (param, user) {
     let addinroom = await service.addInRoom({
         roomid: chatroom, sellerid: product.sellerid, userid: user.id,orderid:returnOrder.id
     })
-    let addinroomSeller = await service.addInRoom({
-        roomid: chatroom, sellerid: product.sellerid, userid: user.id,orderid:returnOrder.id
-    })
     param.forEach(async (order) => {
         //adds addproductinorder tanble
         let prodInorder = {

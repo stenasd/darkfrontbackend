@@ -54,6 +54,7 @@ exports.getAllRoomsWhereUserId = async function (userid) {
     return room;
 };
 exports.getAllRoomsWhereSellerId = async function (userid) {
+    console.log(userid)
     const room = await inRoom.findAll({
         where: { sellerid: userid }
     });
@@ -66,7 +67,6 @@ exports.getOrderWhereRoomID = async function (roomIdParam) {
     return room;
 };
 exports.getproduct = async function (productid) {
-    console.log(productid)
     const product = await products.findOne({
         where: { id: productid }
     });
@@ -74,7 +74,6 @@ exports.getproduct = async function (productid) {
 };
 
 exports.getProductsInOrder = async function (orderid) {
-    console.log(orderid)
     const order = await prodInOrder.findAll({
         where: { orderid: orderid }
     });
