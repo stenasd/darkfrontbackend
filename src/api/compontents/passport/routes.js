@@ -34,8 +34,9 @@ exports.route = async function route(app) {
         });
     });
     app.post('/signup', async function (req, res) {
-        console.log(req.body.signupobj);
-        let signres = await controller.signup(req.body.signupobj)
+        console.log("body");
+        console.log(req.body);
+        let signres = await controller.signup(req.body.data)
         console.log(signres)
         res.status(200).json(signres);
     });

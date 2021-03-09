@@ -15,26 +15,25 @@ const upload = multer({
         fileSize: 4 * 1024 * 1024,
     }
 });
-
-
 exports.routes = async function route(app) {
     app.post('/creatListing', upload.single('file'), async function (req, res) {
         if (!verifyer.verifyRef(req.user.refkey)) {
-            res.status(400)
+            res.status(400).json({ error: 'invalid ref key' });
             return
         }
         const imagePath = path.join('./images');
         const fileUpload = new Resize(imagePath);
         if (!req.file) {
             console.log("image upload error")
-            res.status(401).json({ error: 'Please provide an image' });
+            res.status(400).json({ error: 'Please provide an image' });
         }
         console.log("image upload")
         const filename = await fileUpload.save(req.file.buffer);
         console.log(filename)
         if (controller.creatListing(JSON.parse(req.body.creatListing), req.user, JSON.parse(req.body.creatProduct), await filename)) {
+            res.status(200).json({ error: 'Created' });
         }
-        res.status(400)
+        res.status(200)
     });
     app.get("/allListings", async function (req, res) {
         console.log("listing");
@@ -54,7 +53,7 @@ exports.routes = async function route(app) {
             return
         }
         console.log("create listing");
-        if (controller.creatOrder(req.body,req.user)) {
+        if (controller.creatOrder(req.body, req.user)) {
             res.status(200)
         }
         res.status(400)
