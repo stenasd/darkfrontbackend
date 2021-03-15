@@ -19,6 +19,8 @@ async function modelinit() {
     await models.products.sync({ alter: true });
     await models.refkey.sync({ alter: true });
     await models.prodInOrder.sync({alter: true});
+    await models.transactions.sync({alter: true});
+    await models.usedAdresses.sync({alter: true});
 }
 modelinit()
 middelware.initRestMiddleware(app, io);

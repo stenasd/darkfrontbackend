@@ -19,6 +19,10 @@ const userModel = sequelize.define('userModel', {
         autoIncrement: true,
         primaryKey: true
     },
+    btc: {
+        type: DataTypes.FLOAT,
+        defaultValue: 0
+    },
     name: {
         type: DataTypes.STRING,
     },
@@ -201,3 +205,52 @@ const prodInOrder = sequelize.define('prodInOrder', {
 
 });
 exports.prodInOrder = prodInOrder
+
+
+
+const usedAdresses = sequelize.define('usedAdresses', {
+    // Model attributes are defined here
+    adress: {
+        type: DataTypes.STRING
+    },
+    userid:{
+        type: DataTypes.INTEGER,
+    }
+}, {
+
+});
+exports.usedAdresses = usedAdresses
+
+
+const transactions = sequelize.define('transactions', {
+    // Model attributes are defined here
+    txid: {
+        type: DataTypes.STRING,
+    }, 
+    adress: {
+        type: DataTypes.STRING,
+    }, 
+    amount: {
+        type: DataTypes.FLOAT,
+    },
+    type: {
+        //0 deposit 1 withdraw
+        type: DataTypes.STRING
+    },
+}, {
+});
+exports.transactions = transactions
+
+//addreses table
+
+ 
+//unused adresses
+//used adress
+//  expiredate
+
+
+//transactions
+//adress id
+//amount
+//deposit or withdrawlar
+

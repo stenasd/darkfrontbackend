@@ -8,7 +8,7 @@
 const controller = require('./controller');
 const verifyer = require('../../securityUtil')
 const path = require('path');
-const Resize = require('./Resize');
+const Resize = require('./resize');
 const multer = require('multer');
 const upload = multer({
     limits: {
@@ -44,6 +44,9 @@ exports.routes = async function route(app) {
     app.get("/getListing", async function (req, res) {
         let resjson = await controller.getListing(req.query.listingID)
         res.status(200).json(resjson);
+    });
+    app.get("/", async function (req, res) {
+        console.log("test")
     });
     app.post('/addOrder', async function (req, res) {
         console.log(req.user)
