@@ -13,17 +13,27 @@ exports.creatnewadress = async function (userid) {
   let insertobject = { userid: userid, adress: adrr }
   let res = await service.addUsedAdress(insertobject)
   if (res) {
-    console.log(adrr);
     return adrr
   }
 }
+exports.getCurrentBalance = async function (userid) {
+  //service get txid where userid
+  let a = await service.getRawUserId(userid)
+  console.log(a)
+  return a.btc
+}
 exports.getCurrentAdress = async function (userid) {
-  let a =  await service.getUsedAdressWhereID(userid)
-  console.log(a);
+  //service get txid where userid
+  let a = await service.getUsedAdressWhereID(userid)
+  console.log(a)
+  return a
+}
+exports.getTXIDS = async function (userid) {
+  let a = await service.getTXID(userid)
   return a
 }
 exports.sync = async function () {
-  console.log("sync transactions");
+
   let wallet = await client.listTransactions();
   /*
   wallet.forEach(async element => {
@@ -43,19 +53,19 @@ exports.sync = async function () {
           let sendamount = parseFloat (userobj.btc) + parseFloat(element.amount)
           let sendobject = { id: userobj.id, btc: sendamount }
           console.log(userobj.btc)
-          service.updateUser(sendobject)
+          service.updateUser(sendobject)zzzz
          
         }
-        //add funds to user account
+        //add funds to user accountz
       }
     }
   })
 
 */
-  for(const element of wallet){
+  for (const element of wallet) {
     let foundadress = await service.getTXID(element.txid)
     if (!foundadress) {
-      console.log(element.amount)
+
       let adresSuc = await service.addTransactions({
         txid: element.txid,
         adress: element.address,
@@ -64,14 +74,16 @@ exports.sync = async function () {
       })
       if (adresSuc) {
         let usedAdress = await service.getUsedAdress(element.address)
-        if(usedAdress){
+        if (usedAdress) {
           let userobj = await service.getRawUserId(usedAdress.userid)
-          let sendamount = parseFloat (userobj.btc) + parseFloat(element.amount)
+          let sendamount = parseFloat(userobj.btc) + parseFloat(element.amount)
           let sendobject = { id: userobj.id, btc: sendamount }
-          console.log(userobj.btc+" "+element.amount)
-          console.log("sendamoutn"+JSON.stringify(sendobject))
           service.updateUser(sendobject)
-         
+          let sendTXID = {
+            txid: element.txid, userid: userobj.id
+          }
+          service.addTXID(sendTXID)
+
         }
         //add funds to user account
       }

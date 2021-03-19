@@ -28,7 +28,7 @@ exports.saveMessage = async function (obj) {
     return await service.saveMessage(obj)
 }
 exports.getOrderWhereRoomID = async function (roomid) {
-    return await service.getOrderWhereRoomID(obj)
+    return await service.getOrderWhereRoomID(roomid)
 }
 exports.verifysession = async function (obj) {
     let a = await verifyer.varifySess(obj)
@@ -40,7 +40,45 @@ exports.verifysession = async function (obj) {
 exports.getAllRoomsWhereUserId = async function (obj) {
     return await service.getAllRoomsWhereUserId(obj)
 }
+exports.getOrder = async function (orderid,senderID) {
+        let order = await service.getOrderWhereOrderID(orderid)
+        let getProductsInOrder = await service.getProductsInOrder(orderid)
+        let prodInOrder = await Promise.all(getProductsInOrder.map(async function (param) {
+            let product = await service.getproduct(param.productid)
+            return {
+                productName: product.name,
+                productPrice: product.price,
+                quant: param.quant
+            }
+        }))
+        let chathistory = await service.getAllMsgInRoom(order.roomid)
+        console.log("chathistory");
+        console.log(orderid)
+        let chatHistory = Promise.all(chathistory.map(async function (param1) {
+            let user = await service.getRawUserId(param1.userid)
+            let returnmessage = {
+                text: param1.text,
+                image: param1.image,
+                name: user.nick,
+                date: param1.createdAt
+            }
+            return returnmessage
+        }))
+        let seller = await service.getRawUserId(order.sellerid)
+        let buyer = await service.getRawUserId(order.userid)
+
+        let returnobject = {
+            products: await prodInOrder,
+            messages: await chatHistory,
+            orderID: order.id,
+            seller: seller.nick,
+            buyer: buyer.nick,
+            senderID:senderID
+        }
+        return returnobject
+}
 exports.getChats = async function (userid) {
+
     let allrooms = await service.getAllRoomsWhereUserId(userid)
     return await Promise.all(allrooms.map(async function (param) {
         let totalcost = 0
@@ -81,6 +119,8 @@ exports.getChats = async function (userid) {
             buyer: buyer.nick,
             title: ordertitle
         }
+
+
         return returnobject
     }))
 }
@@ -124,7 +164,8 @@ exports.getChatsSel = async function (userid) {
             buyer: buyer.nick,
             title: ordertitle
         }
-        return returnobject
+        if (userid == order.sellerid) { return returnobject }
+        return false
     }))
 }
 

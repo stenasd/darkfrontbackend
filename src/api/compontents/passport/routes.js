@@ -33,6 +33,12 @@ exports.route = async function route(app) {
             res.redirect('/');
         });
     });
+    app.get('/logout', function (req, res) {
+        console.log("logout");
+        req.session.destroy(function (err) {
+            res.redirect('/');
+        });
+    });
     app.post('/signup', async function (req, res) {
         console.log("body");
         console.log(req.body);

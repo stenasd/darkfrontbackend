@@ -2,16 +2,32 @@ const controller = require('./controller');
 const verifyer = require('../../securityUtil')
 var CronJob = require('cron').CronJob;
 exports.routes = async function route(app) {
-    var job = new CronJob('*/2 * * * *', function () {
-        controller.sync()
-    }, null, true, 'America/Los_Angeles');
-    job.start();
+    //var job = new CronJob('*/2 * * * *', function () {
+    //    controller.sync()
+    //}, null, true, 'America/Los_Angeles');
+    //job.start();
     //get adress for client 
-    app.get("/creatAdress", async function (req, res) {
+    app.post("/creatAdress", async function (req, res) {
+        console.log("no addr");
         if (req.user) {
-            let adrr = await controller.getnewadress(req.user.id)
+            let adrr = await controller.creatnewadress(req.user.id)
+            
+            
             if (adrr) {
                 console.log("todo insert res here")
+                res.status(200).json({ adrr: adrr,});            
+            }
+        }
+        else {
+            console.log("no user")
+        }
+    });
+    app.get("/balance", async function (req, res) {
+        console.log("curr add");
+        if (req.user) {
+            let btc = await controller.getCurrentBalance(req.user.id)
+            if (btc) {
+                res.status(200).json({ btc: btc });
             }
         }
         else {
@@ -19,10 +35,11 @@ exports.routes = async function route(app) {
         }
     });
     app.get("/getCurrentAdress", async function (req, res) {
+        console.log("curr add");
         if (req.user) {
-            let adrr = await controller.getnewadress(req.user.id)
+            let adrr = await controller.getCurrentAdress(req.user.id)
             if (adrr) {
-                console.log("todo insert res here")
+                res.status(200).json({ adrr: adrr.adress });
             }
         }
         else {

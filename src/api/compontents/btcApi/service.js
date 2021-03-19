@@ -2,7 +2,7 @@ const models = require('../../../../db/models');
 const transactions = models.transactions;
 const usedAdresses = models.usedAdresses;
 const userModel = models.userModel;
-
+const TXID = models.ownedTXID;
 exports.getRawUserId = async function (idParam) {
     const user = await userModel.findOne({ where: { id: idParam } });
     return user;
@@ -17,10 +17,15 @@ exports.updateUser = async function (idParam) {
     return user;
 }
 
-exports.getTXID = async function (param) {
-
-    const returnvar = await transactions.findOne({ where: { txid: param } });
+exports.getTXIDWhereUSER = async function (param) {
+    const returnvar = await TXID.findAll({ where: { userid: param } });
     return returnvar;
+};
+exports.addTXID = async function (insertobject) {
+    const txid = await TXID.create({
+        TXID: insertobject.txid, userid: insertobject.userid
+    });
+    return txid;
 };
 
 exports.addTransactions = async function (param) {
@@ -37,6 +42,10 @@ exports.addUsedAdress = async function (insertobject) {
     return usedadresses;
 };
 exports.getUsedAdress = async function (param) {
+    const adress = await usedAdresses.findOne({ where: { adress: param } });
+    return adress;
+};
+exports.getTXID = async function (param) {
     const adress = await usedAdresses.findOne({ where: { adress: param } });
     return adress;
 };

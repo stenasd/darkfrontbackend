@@ -60,6 +60,12 @@ exports.getAllRoomsWhereSellerId = async function (userid) {
     });
     return room;
 };
+exports.getOrderWhereOrderID = async function (orderid) {
+    const room = await orders.findOne({
+        where: { id: orderid }
+    });
+    return room;
+};
 exports.getOrderWhereRoomID = async function (roomIdParam) {
     const room = await orders.findOne({
         where: { roomid: roomIdParam }

@@ -221,6 +221,19 @@ const usedAdresses = sequelize.define('usedAdresses', {
 });
 exports.usedAdresses = usedAdresses
 
+const ownedTXID = sequelize.define('ownedTXID', {
+    // Model attributes are defined here
+    TXID: {
+        type: DataTypes.STRING
+    },
+    userid:{
+        type: DataTypes.INTEGER,
+    }
+}, {
+
+});
+exports.ownedTXID = ownedTXID
+
 
 const transactions = sequelize.define('transactions', {
     // Model attributes are defined here
