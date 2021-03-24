@@ -17,7 +17,6 @@ exports.getAllListing = async function () {
 };
 
 exports.getProduct = async function (param) {
-    console.log(param);
     const returnvar = await products.findOne({ where: { id: param } });
     return returnvar;
 };
@@ -42,7 +41,6 @@ exports.creatInListing = async function (pID, lID) {
 exports.creatListing = async function (insertobject) {
     //add inListing
     //add listings
-    console.log(insertobject)
     const list = await listings.create({
         name: insertobject.name, sellerid: insertobject.sellerid, text: insertobject.text, image: insertobject.image
     });

@@ -4,20 +4,20 @@ const verifyer = require('../../securityUtil')
 exports.updateState = async function (obj) {
     return await service.updateOrderState(obj)
 }
-exports.updateReviews = async function (obj) {
-    let order = await getRoomWhereOrderID(obj.orderid)
+exports.updateReviews = async function (orderid,rating) {
+    let order = await service.getRoomWhereOrderID(orderid)
     let user = await service.getRawUserId(order.sellerid)
     let currentscore = user.rating
     let numberOfRatings = user.ratingNr
   
     //typecheck here
     if (numberOfRatings == 0) {
-        currentscore = obj.rating
+        currentscore = rating
         numberOfRatings = 1
     }
     else {
         let a = currentscore * numberOfRatings
-        a = a + obj.rating
+        a = a + rating
         numberOfRatings++;
         currentscore = a / numberOfRatings
     }
@@ -54,16 +54,18 @@ exports.getOrderWhereRoomID = async function (roomid) {
     return await service.getOrderWhereRoomID(roomid)
 }
 exports.verifysession = async function (obj) {
+    console.log("verifysession")
     let a = await verifyer.varifySess(obj)
     let userid = JSON.parse(a.data)
     userid = userid.passport.user
     return await service.getRawUserId(userid)
-
 }
 exports.getAllRoomsWhereUserId = async function (obj) {
+    console.log("getAllRoomsWhereUserId")
     return await service.getAllRoomsWhereUserId(obj)
 }
 exports.getOrder = async function (orderid, senderID) {
+    console.log("getOrder")
     let order = await service.getOrderWhereOrderID(orderid)
     let getProductsInOrder = await service.getProductsInOrder(orderid)
     let prodInOrder = await Promise.all(getProductsInOrder.map(async function (param) {
@@ -75,8 +77,6 @@ exports.getOrder = async function (orderid, senderID) {
         }
     }))
     let chathistory = await service.getAllMsgInRoom(order.roomid)
-    console.log("chathistory");
-    console.log(orderid)
     let chatHistory = Promise.all(chathistory.map(async function (param1) {
         let user = await service.getRawUserId(param1.userid)
         let returnmessage = {
@@ -89,19 +89,23 @@ exports.getOrder = async function (orderid, senderID) {
     }))
     let seller = await service.getRawUserId(order.sellerid)
     let buyer = await service.getRawUserId(order.userid)
-
+    let isSeller = false
+    if(senderID==order.sellerid){
+        isSeller = true
+    }
     let returnobject = {
         products: await prodInOrder,
         messages: await chatHistory,
         orderID: order.id,
         seller: seller.nick,
         buyer: buyer.nick,
-        senderID: senderID
+        isSeller:isSeller,
+        orderstate:order.orderstate,
     }
     return returnobject
 }
 exports.getChats = async function (userid) {
-
+    console.log("getChats")
     let allrooms = await service.getAllRoomsWhereUserId(userid)
     return await Promise.all(allrooms.map(async function (param) {
         let totalcost = 0
@@ -133,14 +137,18 @@ exports.getChats = async function (userid) {
         let ordertitle = prodInOrder.map(data => {
             return data.productName + " QT: " + data.quant + " Pris: " + data.productPrice
         })
-
+        if(order.orderstate){
+            order.orderstate=0;
+        }
         let returnobject = {
             products: await prodInOrder,
             messages: await chatHistory,
             orderID: order.id,
             seller: seller.nick,
             buyer: buyer.nick,
-            title: ordertitle
+            orderstate: order.orderstate,
+            title:ordertitle
+
         }
 
 
@@ -148,6 +156,7 @@ exports.getChats = async function (userid) {
     }))
 }
 exports.getChatsSel = async function (userid) {
+    console.log("getChatsSel");
     let allrooms = await service.getAllRoomsWhereSellerId(userid)
     return await Promise.all(allrooms.map(async function (param) {
         let totalcost = 0
@@ -193,6 +202,7 @@ exports.getChatsSel = async function (userid) {
 }
 
 exports.checkOrderBuyer = async function (orderid, userid) {
+    console.log("checkOrderBuyer");
     // return true if buyer can do buyer
     let order = await service.getRoomWhereOrderID(orderid);
     if (order.userid == userid) {
@@ -201,6 +211,7 @@ exports.checkOrderBuyer = async function (orderid, userid) {
     return false
 }
 exports.checkOrderSeller = async function (orderid, userid) {
+    console.log("checkOrderSeller");
     // return true if seller can do sell stuff
     let order = await service.getRoomWhereOrderID(orderid);
     if (order.sellerid == userid) {

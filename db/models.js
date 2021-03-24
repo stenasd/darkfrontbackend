@@ -130,6 +130,7 @@ const orders = sequelize.define('orders', {
     },
     orderstate: {
         type: DataTypes.INTEGER,
+        defaultValue: 0
     },
 }, {
 

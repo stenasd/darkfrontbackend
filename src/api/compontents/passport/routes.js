@@ -8,7 +8,6 @@ passport.use(new Strategy(
 
             if (err) { return cb(err); }
             if (!user) { return cb(null, false); }
-            console.log(user.pass + " " + password);
             if (user.pass != password) { return cb(null, false); }
             return cb(null, user);
         });
@@ -40,10 +39,7 @@ exports.route = async function route(app) {
         });
     });
     app.post('/signup', async function (req, res) {
-        console.log("body");
-        console.log(req.body);
         let signres = await controller.signup(req.body.data)
-        console.log(signres)
         res.status(200).json(signres);
     });
     app.post('/login',
@@ -59,7 +55,6 @@ exports.route = async function route(app) {
                     authenticated: true,
                 });
             }
-            console.log(req.sessionID);
 
         }
         else {
@@ -77,7 +72,6 @@ exports.route = async function route(app) {
                     sessionID: req.sessionID,
                 });
             }
-            console.log(req.sessionID);
 
         }
         else {

@@ -7,7 +7,7 @@ const userModel = models.userModel;
 const ref = models.refkey
 const sessionStore = models.sessionStore
 exports.veifyUser = async function (nameparam) {
- 
+    console.log("verf veifyUser");
     const user = await userModel.findOne({ where: { name: nameparam } });
   
     if(user.id){ 
@@ -17,12 +17,14 @@ exports.veifyUser = async function (nameparam) {
     return false
 };
 exports.verifyRef = async function (refer) {
+    console.log("verf Ref");
     const refkey = await ref.findOne({ where: { referalcode:refer } });
     if(refkey){return true}
     return false
 };
 
 exports.varifySess = async function (refer) {
+    console.log("verf sess");
     return await  sessionStore.findOne({ where: { session_id:refer } });
 };
 //verify sessionid

@@ -14,7 +14,6 @@ exports.getRawUserName = async function (nameparam) {
     return user;
 };
 exports.creatUser = async function (insertobject) {
-    console.log(insertobject)
     const user = await userModel.create({ name:insertobject.name, pass:insertobject.pass,
     refkey:insertobject.refer, nick:insertobject.nick });
     return user;

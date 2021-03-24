@@ -24,21 +24,20 @@ exports.routes = async function route(app) {
         const imagePath = path.join('./images');
         const fileUpload = new Resize(imagePath);
         if (!req.file) {
-            console.log("image upload error")
             res.status(400).json({ error: 'Please provide an image' });
         }
-        console.log("image upload")
+
         const filename = await fileUpload.save(req.file.buffer);
-        console.log(filename)
+
         if (controller.creatListing(JSON.parse(req.body.creatListing), req.user, JSON.parse(req.body.creatProduct), await filename)) {
             res.status(200).json({ error: 'Created' });
         }
         res.status(200)
     });
     app.get("/allListings", async function (req, res) {
-        console.log("listing");
+
         let resjson = await controller.getAllListings()
-        //console.log(resjson);
+
         res.status(200).json(resjson);
     });
     app.get("/getListing", async function (req, res) {
@@ -46,16 +45,13 @@ exports.routes = async function route(app) {
         res.status(200).json(resjson);
     });
     app.get("/", async function (req, res) {
-        console.log("test")
+
     });
     app.post('/addOrder', async function (req, res) {
-        console.log(req.user)
         if (!verifyer.veifyUser(req.user.name)) {
-            console.log(verifyer.veifyUser(req.user.name));
             res.status(400)
             return
         }
-        console.log("create listing");
         if (controller.creatOrder(req.body, req.user)) {
             res.status(200)
         }
