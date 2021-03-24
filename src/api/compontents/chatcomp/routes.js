@@ -1,9 +1,46 @@
 //verify that sender is can accses and is vail user
 const controller = require('./controller');
 const verifyer = require('../../securityUtil')
-exports.chat = async function chat(app, io) {
-  //todo make checker so only the ones thats in it can accses it
+const path = require('path');
+const Resize = require('../resize');
+const multer = require('multer');
+const upload = multer({
+  limits: {
+    fileSize: 4 * 1024 * 1024,
+  }
+});
 
+
+
+
+exports.chat = async function chat(app, io) {
+  app.post('/chatImage', upload.single('file'), async function (req, res) {
+    const imagePath = path.join('./images');
+    const fileUpload = new Resize(imagePath);
+    if (!req.file) {
+      console.log("image upload error")
+      res.status(400).json({ error: 'Please provide an image' });
+      return
+    }
+    console.log("image upload")
+    if (sessobj) {
+      const filename = await fileUpload.save(req.file.buffer);
+      let sessobj = await controller.verifysession(msg[0])
+      let chatroom = await controller.getRoomWhereOrderID(msg[1].orderid)
+      if (filename) {
+        let savemessage = {
+          text: null,
+          image: filename,
+          name: sessobj.nick,
+          roomid: chatroom.roomid,
+          userid: sessobj.id
+        }
+        controller.saveMessage(savemessage)
+        res.status(200).json(filename);
+      }
+    }
+    res.status(400).json({ error: 'Upload failed' });
+  });
 
   app.get("/activeRooms", async function (req, res) {
 
@@ -14,7 +51,7 @@ exports.chat = async function chat(app, io) {
 
   app.get("/getChat", async function (req, res) {
     console.log(req.query.listingID)
-    let getallroomns = await controller.getOrder(req.query.listingID,req.user.id)
+    let getallroomns = await controller.getOrder(req.query.listingID, req.user.id)
     console.log(getallroomns)
     res.status(200).json([getallroomns]);
 

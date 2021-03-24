@@ -8,7 +8,7 @@
 const controller = require('./controller');
 const verifyer = require('../../securityUtil')
 const path = require('path');
-const Resize = require('./resize');
+const Resize = require('../resize');
 const multer = require('multer');
 const upload = multer({
     limits: {

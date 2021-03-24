@@ -63,7 +63,6 @@ exports.creatProduct = async function (prod, user) {
 exports.creatOrder = async function (param, user) {
     let chatroom = uuidv4();
     let product = await service.getProduct(param[0].productid)
-
     let obj = {
         roomid: chatroom, userid: user.id, sellerid: product.sellerid
     }
@@ -72,13 +71,32 @@ exports.creatOrder = async function (param, user) {
     let addinroom = await service.addInRoom({
         roomid: chatroom, sellerid: product.sellerid, userid: user.id,orderid:returnOrder.id
     })
-    param.forEach(async (order) => {
+    let orderprice = 0
+    param.forEach(async (product) => {
         //adds addproductinorder tanble
         let prodInorder = {
-            orderid: returnOrder.id, productid: order.productid, quant: order.quant
+            orderid: returnOrder.id, productid: product.productid, quant: product.quant
         }
+        let prodprice = await service.getProduct(product.productid)
+        console.log("111111111");
+        console.log(product)
+        console.log("222222222");
+        console.log(prodprice.price*product.quant);
+        orderprice = orderprice + prodprice.price*product.quant
+        console.log("orderprice" + orderprice)
         let a = await service.addProductInOrder(prodInorder)
     });
+    let usermoney = await service.getRawUserId(user.id)
+    let btc = usermoney.btc-orderprice
+    if(btc>=0){
+        usermoney = {id:usermoney.id,btc:btc}
+        service.updateUser(usermoney)
+        console.log("succsesful order");
+        return true;
+    }   
+    else{
+        return false
+    }
 
 }
 

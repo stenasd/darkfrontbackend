@@ -61,17 +61,6 @@ exports.creatOrder = async function (order) {
     });
     return returnorder
 }
-exports.getOrderUser = async function (param) {
-    console.log(param);
-    const returnvar = await products.findOne({ where: { userid: param } });
-    return returnvar;
-};
-exports.getOrderSeller = async function (param) {
-    console.log(param);
-    const returnvar = await products.findOne({ where: { sellerid: param } });
-    return returnvar;
-};
-
 
 exports.getListingFromId = async function (param) {
     const returnvar = await listings.findOne({ where: { id: param } })
@@ -83,10 +72,20 @@ exports.addProductInOrder = async function (order) {
     });
     return returnorder
 }
+
 exports.addInRoom= async function (param) {
     const returnorder = await inRoom.create({
         roomid:param.roomid,sellerid:param.sellerid,userid:param.userid,orderid:param.orderid
     });
     return returnorder
 }
+exports.updateUser = async function (idParam) {
+    const user = await userModel.update({ btc: idParam.btc }, {
+        where: {
+            id: idParam.id
+        }
+    });
+    return user;
+}
+
 // roomid:prod.roomid,userid:prod.userid,sellerid:prod.sellerid,productid:prod.productid,quant:prod.quant

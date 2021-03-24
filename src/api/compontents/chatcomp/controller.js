@@ -10,9 +10,7 @@ exports.getRoomWhereOrderID = async function (id) {
 exports.getSellerRoom = async function (id) {
     return await service.getSellerroom(id)
 }
-exports.saveMessage = async function (obj) {
-    return await service.saveMessage(obj)
-}
+
 exports.verifySender = async function (senderID, roomid) {
     let allinroom = await service.getAllInRoomWhereRoomid(roomid)
     let inroom = false
