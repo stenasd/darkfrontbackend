@@ -36,6 +36,16 @@ const userModel = sequelize.define('userModel', {
     refkey: {
         type: DataTypes.STRING,
     },
+    rating: {
+        type: DataTypes.FLOAT,
+        defaultValue: 0
+    },
+    ratingNr: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0
+    },
+
+
 }, {
 
 });
@@ -117,7 +127,10 @@ const orders = sequelize.define('orders', {
     },
     sellerid: {
         type: DataTypes.INTEGER,
-    }
+    },
+    orderstate: {
+        type: DataTypes.INTEGER,
+    },
 }, {
 
 });

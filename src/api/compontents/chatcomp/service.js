@@ -6,6 +6,30 @@ const inRoom = models.inRoom;
 const orders = models.orders;
 const products = models.products
 const prodInOrder = models.prodInOrder
+
+
+
+
+exports.updateOrderState = async function (orderState) {
+    const user = await orders.update({ orderstate: orderState.orderstate }, {
+        where: {
+            id: orderState.id
+        }
+    });
+    return user;
+}
+
+exports.updateReview = async function (param) {
+    const user = await userModel.update({
+        rating: param.rating,
+        ratingNr: param.ratingNr
+    }, {
+        where: {
+            id: param.id
+        }
+    });
+    return user;
+}
 exports.getAllMsgInRoom = async function (roomIdParam) {
     const msg = await messages.findAll({
         where: { roomid: roomIdParam }
@@ -13,7 +37,7 @@ exports.getAllMsgInRoom = async function (roomIdParam) {
     return msg;
 };
 exports.getRoomWhereOrderID = async function (idParam) {
-    console.log("service"+idParam)
+    console.log("service" + idParam)
     const chatRoom = await orders.findOne({
         where: {
             id: idParam

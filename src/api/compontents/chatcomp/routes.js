@@ -4,13 +4,43 @@ const verifyer = require('../../securityUtil')
 const path = require('path');
 const Resize = require('../resize');
 const multer = require('multer');
+const { stat } = require('fs');
 const upload = multer({
   limits: {
     fileSize: 4 * 1024 * 1024,
   }
 });
 
+app.post("/addreview", async function (req, res) {
+  let state = await controller.checkOrderBuyer(req.query.orderid, req.user.id)
+  if (state == 1) {
+    let respon = await controller.updateState({ id: req.user.id, orderid: req.query.orderid })
+    if (respon) {
+      controller.updateReviews(req)
+      res.status(200)
+    }
+  }
+  res.status(400)
 
+  //TODOSECURITY
+  //Verify order is right state 
+  //verfiy buyer and can review order
+
+  //add review and update orderstate to 2
+  //req orderid and userid
+});
+app.post("/orderSent", async function (req, res) {
+  let state =  await controller.checkOrderSeller(req.query.orderid, req.user.id)
+  if (state == 0) {
+    let respon = await controller.updateState({ id: req.user.id, orderstate: 1 })
+    if (respon) {
+      res.status(200)
+    }
+  }
+  res.status(400)
+  //Updates order state to 1
+  //req orderid and userid veify that is seller and can change tis orderid
+});
 
 
 exports.chat = async function chat(app, io) {

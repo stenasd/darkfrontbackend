@@ -1,0 +1,38 @@
+Security check list:
+chatcomp
+    All rooms stuff 
+        Services: 
+            service.getAllRoomsWhereSellerId
+            service.getAllMsgInRoom
+            service.getProductsInOrder(
+            service.getproduct(param.productid)
+            service.getRawUserId(param1.userid)
+        
+    Socketmessg stuff
+        Not leaking chat uuid 
+        String size check
+        service.saveMessage(obj)
+
+listings
+    service.creatListing
+    service.creatProduct    
+    service.creatInListing
+    service.creatOrder
+    service.addInRoom
+
+passport:
+    session cookie settings
+todo#
+    search function backend and frontend
+    socket rooms impl
+    frontend btc and profile
+    frontend seller page and chat seller and buyer state
+
+
+lowprioTODO#
+    nojavascript frontend
+    redish cach for listings
+    poc onion service
+    dos mitigation
+
+Dont leak userid

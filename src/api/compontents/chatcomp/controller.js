@@ -1,5 +1,30 @@
 const service = require('./service');
 const verifyer = require('../../securityUtil')
+
+exports.updateState = async function (obj) {
+    return await service.updateOrderState(obj)
+}
+exports.updateReviews = async function (obj) {
+    let order = await getRoomWhereOrderID(obj.orderid)
+    let user = await service.getRawUserId(order.sellerid)
+    let currentscore = user.rating
+    let numberOfRatings = user.ratingNr
+  
+    //typecheck here
+    if (numberOfRatings == 0) {
+        currentscore = obj.rating
+        numberOfRatings = 1
+    }
+    else {
+        let a = currentscore * numberOfRatings
+        a = a + obj.rating
+        numberOfRatings++;
+        currentscore = a / numberOfRatings
+    }
+    return await service.updateReview({ rating: currentscore, ratingNr: numberOfRatings, id: user.id })
+}
+
+
 exports.getchatHistory = async function (id) {
     return await service.getAllMsgInRoom(id)
 }
@@ -38,42 +63,42 @@ exports.verifysession = async function (obj) {
 exports.getAllRoomsWhereUserId = async function (obj) {
     return await service.getAllRoomsWhereUserId(obj)
 }
-exports.getOrder = async function (orderid,senderID) {
-        let order = await service.getOrderWhereOrderID(orderid)
-        let getProductsInOrder = await service.getProductsInOrder(orderid)
-        let prodInOrder = await Promise.all(getProductsInOrder.map(async function (param) {
-            let product = await service.getproduct(param.productid)
-            return {
-                productName: product.name,
-                productPrice: product.price,
-                quant: param.quant
-            }
-        }))
-        let chathistory = await service.getAllMsgInRoom(order.roomid)
-        console.log("chathistory");
-        console.log(orderid)
-        let chatHistory = Promise.all(chathistory.map(async function (param1) {
-            let user = await service.getRawUserId(param1.userid)
-            let returnmessage = {
-                text: param1.text,
-                image: param1.image,
-                name: user.nick,
-                date: param1.createdAt
-            }
-            return returnmessage
-        }))
-        let seller = await service.getRawUserId(order.sellerid)
-        let buyer = await service.getRawUserId(order.userid)
-
-        let returnobject = {
-            products: await prodInOrder,
-            messages: await chatHistory,
-            orderID: order.id,
-            seller: seller.nick,
-            buyer: buyer.nick,
-            senderID:senderID
+exports.getOrder = async function (orderid, senderID) {
+    let order = await service.getOrderWhereOrderID(orderid)
+    let getProductsInOrder = await service.getProductsInOrder(orderid)
+    let prodInOrder = await Promise.all(getProductsInOrder.map(async function (param) {
+        let product = await service.getproduct(param.productid)
+        return {
+            productName: product.name,
+            productPrice: product.price,
+            quant: param.quant
         }
-        return returnobject
+    }))
+    let chathistory = await service.getAllMsgInRoom(order.roomid)
+    console.log("chathistory");
+    console.log(orderid)
+    let chatHistory = Promise.all(chathistory.map(async function (param1) {
+        let user = await service.getRawUserId(param1.userid)
+        let returnmessage = {
+            text: param1.text,
+            image: param1.image,
+            name: user.nick,
+            date: param1.createdAt
+        }
+        return returnmessage
+    }))
+    let seller = await service.getRawUserId(order.sellerid)
+    let buyer = await service.getRawUserId(order.userid)
+
+    let returnobject = {
+        products: await prodInOrder,
+        messages: await chatHistory,
+        orderID: order.id,
+        seller: seller.nick,
+        buyer: buyer.nick,
+        senderID: senderID
+    }
+    return returnobject
 }
 exports.getChats = async function (userid) {
 
@@ -167,4 +192,19 @@ exports.getChatsSel = async function (userid) {
     }))
 }
 
-
+exports.checkOrderBuyer = async function (orderid, userid) {
+    // return true if buyer can do buyer
+    let order = await service.getRoomWhereOrderID(orderid);
+    if (order.userid == userid) {
+        return order.orderstate
+    }
+    return false
+}
+exports.checkOrderSeller = async function (orderid, userid) {
+    // return true if seller can do sell stuff
+    let order = await service.getRoomWhereOrderID(orderid);
+    if (order.sellerid == userid) {
+        return order.orderstate
+    }
+    return false
+}
