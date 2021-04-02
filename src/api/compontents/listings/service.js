@@ -21,12 +21,6 @@ exports.getProduct = async function (param) {
     return returnvar;
 };
 
-//get orders for orderhistory and return to chat
-exports.getOrdersWhereUserId = async function (param) {
-    const returnvar = await orders.findAll({ where: { id: param } });
-    return returnvar;
-};
-
 //to get products and prices for listing
 exports.getProdcutsInListing = async function (param) {
     const returnvar = await inListing.findAll({ where: { listingid: param } });
@@ -60,6 +54,7 @@ exports.creatOrder = async function (order) {
     return returnorder
 }
 
+//unused when redis cachce
 exports.getListingFromId = async function (param) {
     const returnvar = await listings.findOne({ where: { id: param } })
     return returnvar;

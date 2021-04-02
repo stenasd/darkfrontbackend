@@ -26,9 +26,9 @@ exports.signup = async function(obj) {
 
     let dupname = await findDuplicateUse(obj.name)
     let dupnick = await findDuplicateNick(obj.nick)
-    let passlenght = await checkLenght(obj.pass)
-    let nameLenght = await checkLenght(obj.name)
-    let nickLenght = await checkLenght(obj.nick)
+    let passlenght =  checkLenght(obj.pass)
+    let nameLenght =  checkLenght(obj.name)
+    let nickLenght =  checkLenght(obj.nick)
     let resobj = { duplname: dupname, duplnick: dupnick, succ: false }
     if (dupname||dupnick||passlenght||nameLenght||nickLenght) {
         console.log("failed signup");

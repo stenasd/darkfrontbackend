@@ -1,7 +1,3 @@
-//verify user
-//verify seller
-//verify creat accses
-//use username for all verifcation
 const models = require('../../db/models');
 const userModel = models.userModel;
 const ref = models.refkey
@@ -15,14 +11,19 @@ exports.veifyUser = async function (nameparam) {
     return false
 };
 exports.verifyRef = async function (refer) {
+    if(!refer){
+        return false
+    }
     console.log("verf Ref");
     const refkey = await ref.findOne({ where: { referalcode:refer } });
     if(refkey){return true}
     return false
 };
 
-exports.varifySess = async function (refer) {
+exports.varifySess = async function (sessionId) {
+    if(!sessionId){
+        return
+    }
     console.log("verf sess");
-    return await  sessionStore.findOne({ where: { session_id:refer } });
+    return await  sessionStore.findOne({ where: { session_id:sessionId } });
 };
-//verify sessionid

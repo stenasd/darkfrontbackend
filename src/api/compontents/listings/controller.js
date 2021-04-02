@@ -70,28 +70,34 @@ exports.getListing = async function(id) {
     return await listing
 }
 exports.creatListing = async function(insertobject, user, productParam, imagePath) {
-    //verify seller
-    //service.creatInListing()
     let data = { name: insertobject.titel, sellerid: user.id, image: imagePath, text: insertobject.text }
-    let createdListing = await service.creatListing(data)
+    let nameLenght =  checkLenghtName(obj.name)
+    let textLenght =  checkLenghtText(obj.text)
+    let produktLenght
     if (!createdListing) { return false }
     const prodarra = await Promise.all(productParam.map(async(prod) => {
         let object = { sID: user.id, name: prod.text, price: prod.price }
+        produktLenght = checkProduktLenght(prod.text)
+        if(price>1000000){
+            produktLenght = true
+            return
+        }
+        if(produktLenght){
+            return
+        }
         return await service.creatProduct(object)
     }));
+    if (nameLenght||textLenght||produktLenght) {
+        console.log("failed signup");
+        return resobj
+    }
     prodarra.forEach(prod => {
         service.creatInListing(prod.id, createdListing.id)
     });
-
+    let createdListing = await service.creatListing(data)
     await updateCache();
     return true
 };
-exports.creatProduct = async function(prod, user) {
-
-    let object = { sID: user.id, name: prod.name, price: prod.price, image: prod.image }
-    return await service.creatProduct(object)
-}
-
 exports.creatOrder = async function(param, user) {
     let chatroom = uuidv4();
     let product = await service.getProduct(param[0].productid)
@@ -128,5 +134,31 @@ exports.creatOrder = async function(param, user) {
     } else {
         return false
     }
-
+}
+async function checkLenghtName(param) {
+    console.log(param.length)
+    if(param.length<3){
+        return true
+    }
+    if(param.length>19){
+        return true
+    }
+    return false
+}
+async function checkLenghtText(param) {
+    console.log(param.length)
+    if(param.length>1000){
+        return true
+    }
+    return false
+}
+async function checkProduktLenght(param) {
+    console.log(param.length)
+    if(param.length<3){
+        return true
+    }
+    if(param.length>60){
+        return true
+    }
+    return false
 }
