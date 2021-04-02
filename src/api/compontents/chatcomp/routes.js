@@ -5,6 +5,7 @@ const path = require('path');
 const Resize = require('../resize');
 const multer = require('multer');
 const { stat } = require('fs');
+const { log } = require('console');
 const upload = multer({
   limits: {
     fileSize: 4 * 1024 * 1024,
@@ -15,30 +16,28 @@ const upload = multer({
 
 exports.chat = async function chat(app, io) {
   app.post("/addreview", async function (req, res) {
-    console.log(req.body)
     let state = await controller.checkOrderBuyer(req.body.orderid, req.user.id)
     if (state == 1) {
       let foo = { id: req.body.orderid, orderstate: 2 }
       let respon = await controller.updateState(foo)
       if (respon) {
-        controller.updateReviews(req.body.orderid,req.body.rating)
+        controller.updateReviews(req.body.orderid, req.body.rating)
         res.status(200)
       }
     }
     res.status(400)
-  
+
     //TODOSECURITY
     //Verify order is right state 
     //verfiy buyer and can review order
-  
+
     //add review and update orderstate to 2
     //req orderid and userid
   });
   app.post("/orderSent", async function (req, res) {
-    console.log(req.body);
-    let state =  await controller.checkOrderSeller(req.body.orderid, req.user.id)
+    let state = await controller.checkOrderSeller(req.body.orderid, req.user.id)
     if (state == 0) {
-      let respon = await controller.updateState({  id: req.body.orderid, orderstate: 1 })
+      let respon = await controller.updateState({ id: req.body.orderid, orderstate: 1 })
       if (respon) {
         res.status(200)
       }
@@ -54,24 +53,27 @@ exports.chat = async function chat(app, io) {
       res.status(400).json({ error: 'Please provide an image' });
       return
     }
-
-    if (sessobj) {
-      const filename = await fileUpload.save(req.file.buffer);
-      let sessobj = await controller.verifysession(msg[0])
-      let chatroom = await controller.getRoomWhereOrderID(msg[1].orderid)
-      if (filename) {
-        let savemessage = {
-          text: null,
-          image: filename,
-          name: sessobj.nick,
-          roomid: chatroom.roomid,
-          userid: sessobj.id
-        }
-        controller.saveMessage(savemessage)
-        res.status(200).json(filename);
+    const filename = await fileUpload.save(req.file.buffer);
+    let chatroom = await controller.getRoomWhereOrderID(req.body.orderid)
+    if (filename) {
+      let savemessage = {
+        text: "testimage",
+        image: filename,
+        name: req.user.nick,
+        roomid: chatroom.roomid,
+        userid: req.user.id
       }
+      controller.saveMessage(savemessage)
+      let returnmessage = {
+        text: req.body.text,
+        image: filename,
+        name: req.user.nick,
+        orderid: req.body.orderid
+      }
+      io.to(chatroom.roomid).emit('msg', returnmessage);
+      //io.sockets.in(chatroom.roomid).emit('msg', savemessage);
     }
-    res.status(400).json({ error: 'Upload failed' });
+
   });
 
   app.get("/activeRooms", async function (req, res) {
@@ -82,8 +84,6 @@ exports.chat = async function chat(app, io) {
   });
 
   app.get("/getChat", async function (req, res) {
-    console.log(req)
-    
     let getallroomns = await controller.getOrder(req.query.listingID, req.user.id)
     res.status(200).json([getallroomns]);
 
@@ -103,8 +103,6 @@ exports.chat = async function chat(app, io) {
     });
 
     socket.on('auth', async function (msg) {
-      console.log("mesage");
-      console.log(msg)
       let sessobj = await controller.verifysession(msg[0])
       if (sessobj) {
         let chatroom = await controller.getRoomWhereOrderID(msg[1].orderid)
@@ -120,13 +118,11 @@ exports.chat = async function chat(app, io) {
         let chatroom = await controller.getRoomWhereOrderID(msg[1].orderid)
         let returnmessage = {
           text: msg[1].text,
-          image: "asd",
           name: sessobj.nick,
           orderid: msg[1].orderid
         }
         let savemessage = {
           text: msg[1].text,
-          image: "asd",
           name: sessobj.nick,
           roomid: chatroom.roomid,
           userid: sessobj.id

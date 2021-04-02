@@ -9,7 +9,7 @@ chat_message= id-sessionid-autor    will creat a new room when a request has bee
 
 
 */
-
+ 
 
 
 const userModel = sequelize.define('userModel', {
@@ -44,8 +44,6 @@ const userModel = sequelize.define('userModel', {
         type: DataTypes.INTEGER,
         defaultValue: 0
     },
-
-
 }, {
 
 });

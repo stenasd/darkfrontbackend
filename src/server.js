@@ -7,7 +7,11 @@ const routes = require('./api/componentRoutes');
 const middelware = require('./middleware');
 const app = express();
 const http = require('http').Server(app);
-const io = require('socket.io')(http);
+const io = require('socket.io')(http, {
+    cors: {
+      origin: '*',
+    }
+  });
 
 async function modelinit() {
     await models.userModel.sync({ alter: true });
@@ -23,10 +27,10 @@ async function modelinit() {
     await models.usedAdresses.sync({alter: true});
     await models.ownedTXID.sync({alter: true});
 }
+
 modelinit()
 middelware.initRestMiddleware(app, io);
 dbstart.start();
 console.log("testrun");
 routes.initRestRoutes(app, io);
-
 exports.app = http

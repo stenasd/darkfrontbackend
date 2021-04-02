@@ -11,9 +11,7 @@ exports.veifyUser = async function (nameparam) {
     const user = await userModel.findOne({ where: { name: nameparam } });
   
     if(user.id){ 
-        console.log("true");
         return true}
-        console.log("fas");
     return false
 };
 exports.verifyRef = async function (refer) {

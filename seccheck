@@ -1,4 +1,5 @@
 Security check list:
+
 chatcomp
     All rooms stuff 
         Services: 
@@ -22,17 +23,39 @@ listings
 
 passport:
     session cookie settings
+
+
 todo#
-    search function backend and frontend
-    socket rooms impl
-    frontend btc and profile
-    frontend seller page and chat seller and buyer state
+    buyorder respons
 
 
 lowprioTODO#
     nojavascript frontend
-    redish cach for listings
     poc onion service
     dos mitigation
+    lazy save redis listings
 
-Dont leak userid
+dont leak credentials:
+userid
+roomid
+refcode
+anybtc stuff
+
+Apicalls
+
+chatImage'
+getChat
+getSessionid
+orderSent
+addreview
+addOrder
+getListing
+checkAuthentication
+balance
+creatListing
+allListings
+getCurrentAdress
+activeRoomsSeller
+signup
+creatAdress
+getCurrentAdress
