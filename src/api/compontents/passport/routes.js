@@ -27,13 +27,13 @@ exports.route = async function route(app) {
     app.use(passport.initialize());
     app.use(passport.session());
     app.post('/logout', function(req, res) {
-        console.log("logout");
+
         req.session.destroy(function(err) {
             res.redirect('/');
         });
     });
     app.get('/logout', function(req, res) {
-        console.log("logout");
+
         req.session.destroy(function(err) {
             res.redirect('/');
         });
@@ -45,6 +45,7 @@ exports.route = async function route(app) {
         //password2
         //refer
         if (typeof req.user !== 'undefined'){
+            console.log(" signup failed loggedin")
             res.status(400)
         }
         else{
@@ -73,7 +74,7 @@ exports.route = async function route(app) {
                 });
             }
         } else {
-
+            console.log("checkAuthentication failed")
             res.status(400).json({
                 authenticated: false,
             });
@@ -90,6 +91,7 @@ exports.route = async function route(app) {
             }
 
         } else {
+            console.log("getSessionid failed");
             res.status(400).json({
                 authenticated: false,
             });

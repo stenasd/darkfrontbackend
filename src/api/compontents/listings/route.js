@@ -22,13 +22,13 @@ exports.routes = async function route(app) {
         req.body.creatProduct = JSON.parse(req.body.creatProduct)
         req.body.creatListing = JSON.parse(req.body.creatListing)
         if (typeof req.user === 'undefined') {
-            console.log("creatListing user");
+            console.log("creatListing user failed");
             res.status(400).json({ error: 'no user' });
             return
         }
         let verfef = await verifyer.verifyRef(req.user.refkey)
         if (typeof verfef === 'undefined') {
-            console.log("creatListing ref");
+            console.log("creatListing ref failed");
             if (!verfef) {
                 res.status(400).json({ error: 'invalid ref key' });
                 return
@@ -37,33 +37,41 @@ exports.routes = async function route(app) {
             res.status(400).json({ error: 'undefined key' });
         }
         if (typeof req.file === 'undefined') {
-            console.log("creatListing file");
+            console.log("creatListing file failed");
             res.status(400).json({ error: 'no file' });
             return
         }
+        console.log(req.body.creatProduct)
         if (typeof req.body.creatProduct === 'undefined') {
-            console.log("creatListing creatProduct");
-            res.status(400)
+            console.log("creatListing creatProduct failed");
+            res.status(400).json({ error: 'product error' });
+            return
+        }
+        if(!req.body.creatProduct[0]){
+            console.log("creatListing creatProduct failed");
+            res.status(400).json({ error: 'no product added' });
             return
         }
         if (typeof req.body.creatListing === 'undefined') {
-            res.status(400)
+            res.status(400).json({ error: 'failed to save' });
             return
         }
         const imagePath = path.join('./images');
         const fileUpload = new Resize(imagePath);
         if (!req.file) {
             res.status(400).json({ error: 'Please provide an image' });
+            return
         }
 
         const filename = await fileUpload.save(req.file.buffer);
-        console.log(req.body.creatListing)
-        if (controller.creatListing(req.body.creatListing, req.user, req.body.creatProduct, await filename)) {
+        if (await controller.creatListing(req.body.creatListing, req.user, req.body.creatProduct, await filename)) {
             //lazy update all listings to search
             res.status(200).json({ error: 'Created' });
+            return
         }
-        console.log("creatListing");
-        res.status(400)
+        else{
+            res.status(400).json({ error: 'failed to save' });
+        }
     });
     app.get("/allListings", async function (req, res) {
         if (typeof req.user === 'undefined') {

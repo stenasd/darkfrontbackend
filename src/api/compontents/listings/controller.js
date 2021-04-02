@@ -70,31 +70,38 @@ exports.getListing = async function(id) {
     return await listing
 }
 exports.creatListing = async function(insertobject, user, productParam, imagePath) {
+
+    //verify seller
+    //service.creatInListing()
     let data = { name: insertobject.titel, sellerid: user.id, image: imagePath, text: insertobject.text }
-    let nameLenght =  checkLenghtName(obj.name)
-    let textLenght =  checkLenghtText(obj.text)
-    let produktLenght
+
+    let nameLenght =  checkLenghtName(data.name)
+    let textLenght =  checkLenghtText(data.text)
+    let produktLenght = false
+    productParam.forEach(prod => {
+        if(prod.price>1000000)
+        {
+            console.log("failed creatListing toHighNumber");
+            produktLenght = true
+        }
+    });
+
+    if (await nameLenght||await textLenght||await produktLenght) {
+        console.log("failed creatListing controller");
+        return false
+    }
+
+    
+    let createdListing = await service.creatListing(data)
     if (!createdListing) { return false }
     const prodarra = await Promise.all(productParam.map(async(prod) => {
         let object = { sID: user.id, name: prod.text, price: prod.price }
-        produktLenght = checkProduktLenght(prod.text)
-        if(price>1000000){
-            produktLenght = true
-            return
-        }
-        if(produktLenght){
-            return
-        }
         return await service.creatProduct(object)
     }));
-    if (nameLenght||textLenght||produktLenght) {
-        console.log("failed signup");
-        return resobj
-    }
     prodarra.forEach(prod => {
         service.creatInListing(prod.id, createdListing.id)
     });
-    let createdListing = await service.creatListing(data)
+
     await updateCache();
     return true
 };
@@ -136,28 +143,33 @@ exports.creatOrder = async function(param, user) {
     }
 }
 async function checkLenghtName(param) {
-    console.log(param.length)
+
     if(param.length<3){
+        console.log("input validation Name failed Creatlisting controller")
         return true
     }
     if(param.length>19){
+        console.log("input validation Name failed Creatlisting controller")
         return true
     }
     return false
 }
 async function checkLenghtText(param) {
-    console.log(param.length)
+
     if(param.length>1000){
+        console.log("input validation text failed Creatlisting controller")
         return true
     }
     return false
 }
 async function checkProduktLenght(param) {
     console.log(param.length)
-    if(param.length<3){
+    if(3>param.length){
+        console.log("input validation Produkt failed Creatlisting controller")
         return true
     }
     if(param.length>60){
+        console.log("input validation Produkt failed Creatlisting controller")
         return true
     }
     return false

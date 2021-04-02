@@ -14,7 +14,7 @@ exports.routes = async function route(app) {
 
 
             if (adrr) {
-                console.log("todo insert res here")
+
                 res.status(200).json({ adrr: adrr, });
             }
         } else {
@@ -22,7 +22,7 @@ exports.routes = async function route(app) {
         }
     });
     app.get("/balance", async function(req, res) {
-        console.log("curr add");
+
         if (req.user) {
             let btc = await controller.getCurrentBalance(req.user.id)
             if (btc) {
@@ -33,14 +33,14 @@ exports.routes = async function route(app) {
         }
     });
     app.get("/getCurrentAdress", async function(req, res) {
-        console.log("curr add");
+
         if (req.user) {
             let adrr = await controller.getCurrentAdress(req.user.id)
             if (adrr) {
                 res.status(200).json({ adrr: adrr.adress });
             }
         } else {
-            console.log("no user")
+
         }
     });
 

@@ -11,11 +11,24 @@ const upload = multer({
     fileSize: 4 * 1024 * 1024,
   }
 });
-
-
-
 exports.chat = async function chat(app, io) {
   app.post("/addreview", async function (req, res) {
+    if (typeof req.user === 'undefined') {
+      console.log("addreview user failed");
+      res.status(400)
+      return
+    }
+    if (typeof req.body.orderid === 'undefined') {
+      console.log("addreview orderid failed");
+      res.status(400)
+      return
+    }
+    if (isNaN(req.body.orderid)) {
+      console.log("addreview orderid failed NaN");
+      res.status(400)
+      return 
+    }
+
     let state = await controller.checkOrderBuyer(req.body.orderid, req.user.id)
     if (state == 1) {
       let foo = { id: req.body.orderid, orderstate: 2 }
@@ -25,16 +38,29 @@ exports.chat = async function chat(app, io) {
         res.status(200)
       }
     }
+    console.log("addreview controllerfail");
     res.status(400)
-
-    //TODOSECURITY
-    //Verify order is right state 
-    //verfiy buyer and can review order
-
-    //add review and update orderstate to 2
-    //req orderid and userid
   });
+
   app.post("/orderSent", async function (req, res) {
+    if (typeof req.user === 'undefined') {
+      console.log("orderSent user failed");
+      res.status(400)
+      return
+    }
+
+    if (typeof req.body.orderid === 'undefined') {
+      console.log("orderSent orderid failed");
+      res.status(400)
+      return
+    }
+
+    if (isNaN(req.body.orderid)) {
+      console.log("orderSent orderid failed NaN");
+      res.status(400)
+      return 
+    }
+
     let state = await controller.checkOrderSeller(req.body.orderid, req.user.id)
     if (state == 0) {
       let respon = await controller.updateState({ id: req.body.orderid, orderstate: 1 })
@@ -42,6 +68,7 @@ exports.chat = async function chat(app, io) {
         res.status(200)
       }
     }
+    console.log("orderSent controller fail");
     res.status(400)
     //Updates order state to 1
     //req orderid and userid veify that is seller and can change tis orderid

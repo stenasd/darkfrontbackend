@@ -12,9 +12,9 @@ exports.veifyUser = async function (nameparam) {
 };
 exports.verifyRef = async function (refer) {
     if(!refer){
+        console.log("verf Ref failed");
         return false
     }
-    console.log("verf Ref");
     const refkey = await ref.findOne({ where: { referalcode:refer } });
     if(refkey){return true}
     return false
@@ -27,3 +27,6 @@ exports.varifySess = async function (sessionId) {
     console.log("verf sess");
     return await  sessionStore.findOne({ where: { session_id:sessionId } });
 };
+
+//verfy in order
+//verify seller and in order

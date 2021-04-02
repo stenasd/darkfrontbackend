@@ -53,18 +53,15 @@ exports.getOrderWhereRoomID = async function(roomid) {
     return await service.getOrderWhereRoomID(roomid)
 }
 exports.verifysession = async function(obj) {
-    console.log("verifysession")
     let a = await verifyer.varifySess(obj)
     let userid = JSON.parse(a.data)
     userid = userid.passport.user
     return await service.getRawUserId(userid)
 }
 exports.getAllRoomsWhereUserId = async function(obj) {
-    console.log("getAllRoomsWhereUserId")
     return await service.getAllRoomsWhereUserId(obj)
 }
 exports.getOrder = async function(orderid, senderID) {
-    console.log("getOrder")
     let order = await service.getOrderWhereOrderID(orderid)
     let getProductsInOrder = await service.getProductsInOrder(orderid)
     let prodInOrder = await Promise.all(getProductsInOrder.map(async function(param) {
@@ -104,7 +101,6 @@ exports.getOrder = async function(orderid, senderID) {
     return returnobject
 }
 exports.getChats = async function(userid) {
-    console.log("getChats")
     let allrooms = await service.getAllRoomsWhereUserId(userid)
     return await Promise.all(allrooms.map(async function(param) {
         let totalcost = 0
@@ -155,7 +151,7 @@ exports.getChats = async function(userid) {
     }))
 }
 exports.getChatsSel = async function(userid) {
-    console.log("getChatsSel");
+
     let allrooms = await service.getAllRoomsWhereSellerId(userid)
     return await Promise.all(allrooms.map(async function(param) {
         let totalcost = 0
@@ -201,7 +197,7 @@ exports.getChatsSel = async function(userid) {
 }
 
 exports.checkOrderBuyer = async function(orderid, userid) {
-    console.log("checkOrderBuyer");
+
     // return true if buyer can do buyer
     let order = await service.getRoomWhereOrderID(orderid);
     if (order.userid == userid) {
@@ -210,7 +206,7 @@ exports.checkOrderBuyer = async function(orderid, userid) {
     return false
 }
 exports.checkOrderSeller = async function(orderid, userid) {
-    console.log("checkOrderSeller");
+
     // return true if seller can do sell stuff
     let order = await service.getRoomWhereOrderID(orderid);
     if (order.sellerid == userid) {

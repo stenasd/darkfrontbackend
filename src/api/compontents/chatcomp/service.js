@@ -11,7 +11,7 @@ const prodInOrder = models.prodInOrder
 
 
 exports.updateOrderState = async function (param) {
-    console.log("update"+param)
+
     const user = await orders.update({ orderstate: param.orderstate }, {
         where: {
             id: param.id
@@ -38,7 +38,7 @@ exports.getAllMsgInRoom = async function (roomIdParam) {
     return msg;
 };
 exports.getRoomWhereOrderID = async function (idParam) {
-    console.log("service1" + idParam)
+
     const chatRoom = await orders.findOne({
         where: {
             id: idParam
@@ -79,7 +79,7 @@ exports.getAllRoomsWhereUserId = async function (userid) {
     return room;
 };
 exports.getAllRoomsWhereSellerId = async function (userid) {
-    console.log(userid)
+
     const room = await inRoom.findAll({
         where: { sellerid: userid }
     });

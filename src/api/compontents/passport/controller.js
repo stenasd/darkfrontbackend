@@ -54,7 +54,6 @@ async function findDuplicateNick(nick) {
     } else { return false }
 }
 async function checkLenght(param) {
-    console.log(param.length)
     if(param.length<3){
         return true
     }

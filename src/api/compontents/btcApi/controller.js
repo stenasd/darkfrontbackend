@@ -19,13 +19,13 @@ exports.creatnewadress = async function (userid) {
 exports.getCurrentBalance = async function (userid) {
   //service get txid where userid
   let a = await service.getRawUserId(userid)
-  console.log(a)
+
   return a.btc
 }
 exports.getCurrentAdress = async function (userid) {
   //service get txid where userid
   let a = await service.getUsedAdressWhereID(userid)
-  console.log(a)
+
   return a
 }
 exports.getTXIDS = async function (userid) {
@@ -39,7 +39,7 @@ exports.sync = async function () {
   wallet.forEach(async element => {
     let foundadress = await service.getTXID(element.txid)
     if (!foundadress) {
-      console.log(element.amount)
+
       let adresSuc = await service.addTransactions({
         txid: element.txid,
         adress: element.address,
@@ -52,7 +52,7 @@ exports.sync = async function () {
           let userobj = await service.getRawUserId(usedAdress.userid)
           let sendamount = parseFloat (userobj.btc) + parseFloat(element.amount)
           let sendobject = { id: userobj.id, btc: sendamount }
-          console.log(userobj.btc)
+
           service.updateUser(sendobject)zzzz
          
         }
