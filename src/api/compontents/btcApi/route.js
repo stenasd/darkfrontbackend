@@ -2,10 +2,11 @@ const controller = require('./controller');
 const verifyer = require('../../securityUtil')
 var CronJob = require('cron').CronJob;
 exports.routes = async function route(app) {
-    //var job = new CronJob('*/2 * * * *', function() {
-    //    controller.sync()
-    //}, null, true, 'America/Los_Angeles');
-    //job.start();
+    controller.sync()
+    var job = new CronJob('*/2 * * * *', function() {
+       controller.sync()
+    }, null, true, 'America/Los_Angeles');
+    job.start();
     //get adress for client 
     app.post("/creatAdress", async function(req, res) {
         console.log("no addr");

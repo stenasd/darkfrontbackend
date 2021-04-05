@@ -197,7 +197,14 @@ exports.getChatsSel = async function(userid) {
 }
 
 exports.checkOrderBuyer = async function(orderid, userid) {
-
+    if(!orderid)
+    {
+        return false
+    }
+    if(!userid)
+    {
+        return false
+    }
     // return true if buyer can do buyer
     let order = await service.getRoomWhereOrderID(orderid);
     if (order.userid == userid) {
@@ -206,7 +213,14 @@ exports.checkOrderBuyer = async function(orderid, userid) {
     return false
 }
 exports.checkOrderSeller = async function(orderid, userid) {
-
+    if(!orderid)
+    {
+        return false
+    }
+    if(!userid)
+    {
+        return false
+    }
     // return true if seller can do sell stuff
     let order = await service.getRoomWhereOrderID(orderid);
     if (order.sellerid == userid) {

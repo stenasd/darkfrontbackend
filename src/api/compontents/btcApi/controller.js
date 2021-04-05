@@ -33,7 +33,7 @@ exports.getTXIDS = async function (userid) {
   return a
 }
 exports.sync = async function () {
-
+  //let wallet1 = await   client.loadWallet('testwallet2',false)
   let wallet = await client.listTransactions();
   /*
   wallet.forEach(async element => {
@@ -63,9 +63,8 @@ exports.sync = async function () {
 
 */
   for (const element of wallet) {
-    let foundadress = await service.getTXID(element.txid)
-    if (!foundadress) {
-
+    let foundTXID = await service.getTXID(element.txid)
+    if (!foundTXID) {
       let adresSuc = await service.addTransactions({
         txid: element.txid,
         adress: element.address,

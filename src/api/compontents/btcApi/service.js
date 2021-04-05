@@ -46,7 +46,7 @@ exports.getUsedAdress = async function (param) {
     return adress;
 };
 exports.getTXID = async function (param) {
-    const adress = await usedAdresses.findOne({ where: { adress: param } });
+    const adress = await transactions.findOne({ where: { txid: param } });
     return adress;
 };
 exports.getUsedAdressWhereID = async function (id) {

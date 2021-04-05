@@ -28,6 +28,8 @@ todo#
     buyorder respons
     btc transaction Security
     seller score on listings
+    returning correct error from controllers
+    whipe all seller data if ref is incorrect
 
 lowprioTODO#
     nojavascript frontend
