@@ -16,7 +16,7 @@ exports.chat = async function chat(app, io) {
     if (typeof req.user === 'undefined') {
       console.log("addreview user failed");
       res.status(400).json({ error: 'addreview user failed' });
-      return 
+      return
     }
     if (typeof req.body.orderid === 'undefined') {
       console.log("addreview orderid failed");
@@ -174,6 +174,7 @@ exports.chat = async function chat(app, io) {
       //check for valid session aka loggedin and valid account
       //check if seller/buyer in order by orderid
       //auth and join chatroom so can get chatmessages with socket.join 
+      /*
       if (typeof msg[0] === 'undefined') {
         console.log("chatauth  failed");
         return
@@ -202,7 +203,7 @@ exports.chat = async function chat(app, io) {
         console.log("failed chat auth");
         return
       }
-
+*/
       if (sessobj) {
         let chatroom = await controller.getRoomWhereOrderID(msg[1].orderid)
         socket.join(chatroom.roomid);
@@ -214,7 +215,7 @@ exports.chat = async function chat(app, io) {
       //check for undefined to avoid crash
       //check for valid session aka loggedin and valid account
       //check if seller/buyer in order by orderid
-      console.log(msg);
+      console.log(1);
       if (typeof msg[0] === 'undefined' || typeof msg[1] === 'undefined') {
         console.log("chatmessage  failed");
         return
