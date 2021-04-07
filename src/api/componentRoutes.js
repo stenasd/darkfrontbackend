@@ -7,5 +7,5 @@ exports.initRestRoutes = function (app,io) {
     exampleroute.chat(app,io); 
     passportroute.route(app)
     listingroute.routes(app)
-    btcroute.routes(app)
+   // btcroute.routes(app)
 };
