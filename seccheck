@@ -25,15 +25,23 @@ passport:
     session cookie settings
 
 todo#
+    #leave text review
+    view seller profile view text reviews //backenddone now frontend
+    disputes//need backend test and frontend integ
+
+    add time checking cronjobs and when dispute is possible
+    login redirect based on javascript or nonjavascript
     buyorder respons
     btc transaction Security
     seller score on listings
     returning correct error from controllers
     whipe all seller data if ref is incorrect
+    add and update user disc
+    admin dispute and refcode handler
 
 lowprioTODO#
     nojavascript frontend
-    poc onion service
+    #poc onion service
     dos mitigation
     lazy save redis listings
 
@@ -43,21 +51,12 @@ roomid
 refcode
 anybtc stuff
 
-Apicalls
 
-chatImage'
-getChat
-getSessionid
-orderSent
-addreview
-addOrder
-getListing
-checkAuthentication
-balance
-creatListing
-allListings
-getCurrentAdress
-activeRoomsSeller
-signup
-creatAdress
-getCurrentAdress
+view profile:
+    add profile text 
+    and review table 
+    with score and text and userid
+
+
+POC test:
+    all review and dispute stuff

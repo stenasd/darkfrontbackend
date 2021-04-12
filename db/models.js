@@ -9,7 +9,7 @@ chat_message= id-sessionid-autor    will creat a new room when a request has bee
 
 
 */
- 
+
 
 
 const userModel = sequelize.define('userModel', {
@@ -41,6 +41,17 @@ const userModel = sequelize.define('userModel', {
         defaultValue: 0
     },
     ratingNr: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0
+    },
+    disc: {
+        type: DataTypes.STRING,
+    },
+    wonDisputes: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0
+    },
+    lostDisputes: {
         type: DataTypes.INTEGER,
         defaultValue: 0
     },
@@ -206,7 +217,7 @@ const prodInOrder = sequelize.define('prodInOrder', {
     // Model attributes are defined here
     orderid: {
         type: DataTypes.INTEGER,
-    }, 
+    },
     productid: {
         type: DataTypes.INTEGER,
     },
@@ -225,7 +236,7 @@ const usedAdresses = sequelize.define('usedAdresses', {
     adress: {
         type: DataTypes.STRING
     },
-    userid:{
+    userid: {
         type: DataTypes.INTEGER,
     }
 }, {
@@ -238,7 +249,7 @@ const ownedTXID = sequelize.define('ownedTXID', {
     TXID: {
         type: DataTypes.STRING
     },
-    userid:{
+    userid: {
         type: DataTypes.INTEGER,
     }
 }, {
@@ -251,10 +262,10 @@ const transactions = sequelize.define('transactions', {
     // Model attributes are defined here
     txid: {
         type: DataTypes.STRING,
-    }, 
+    },
     adress: {
         type: DataTypes.STRING,
-    }, 
+    },
     amount: {
         type: DataTypes.FLOAT,
     },
@@ -266,16 +277,32 @@ const transactions = sequelize.define('transactions', {
 });
 exports.transactions = transactions
 
-//addreses table
+const reviews = sequelize.define('reviews', {
+    sellerid: {
+        type: DataTypes.INTEGER,
+    },
+    orderid: {
+        type: DataTypes.STRING,
+    },
+    text: {
 
- 
-//unused adresses
-//used adress
-//  expiredate
+        type: DataTypes.STRING
+    },
+    rating: {
+        type: DataTypes.INTEGER
+    },
+}, {
+});
+exports.reviews = reviews
 
-
-//transactions
-//adress id
-//amount
-//deposit or withdrawlar
+const disputes = sequelize.define('disputes', {
+    orderid: {
+        type: DataTypes.STRING,
+    },
+    text: {
+        type: DataTypes.STRING
+    },
+}, {
+});
+exports.disputes = disputes
 

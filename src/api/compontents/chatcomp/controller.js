@@ -4,12 +4,20 @@ const verifyer = require('../../securityUtil')
 exports.updateState = async function(obj) {
     return await service.updateOrderState(obj)
 }
-exports.updateReviews = async function(orderid, rating) {
+exports.updateReviews = async function(orderid, rating,text) {
     let order = await service.getRoomWhereOrderID(orderid)
     let user = await service.getRawUserId(order.sellerid)
+    if (rating > 5) {
+        return false;
+    }
+    if (rating < 0){
+        return false
+    }
+    if(!text){
+        return false
+    }
     let currentscore = user.rating
     let numberOfRatings = user.ratingNr
-
     //typecheck here
     if (numberOfRatings == 0) {
         currentscore = rating
@@ -20,6 +28,7 @@ exports.updateReviews = async function(orderid, rating) {
         numberOfRatings++;
         currentscore = a / numberOfRatings
     }
+    service.insertReview(rating,text,order.sellerid,orderid)
     return await service.updateReview({ rating: currentscore, ratingNr: numberOfRatings, id: user.id })
 }
 
@@ -208,8 +217,10 @@ exports.checkOrderBuyer = async function(orderid, userid) {
     // return true if buyer can do buyer
     let order = await service.getRoomWhereOrderID(orderid);
     if (order.userid == userid) {
+        console.log("TRUE");
         return order.orderstate
     }
+    console.log("FALSE");
     return false
 }
 exports.checkOrderSeller = async function(orderid, userid) {

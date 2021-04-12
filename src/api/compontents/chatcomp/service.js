@@ -6,9 +6,18 @@ const inRoom = models.inRoom;
 const orders = models.orders;
 const products = models.products
 const prodInOrder = models.prodInOrder
+const reviews = models.reviews;
 
+exports.insertReview = async function (rating,text,sellerid,orderid) {
 
+    const review = reviews.build({ sellerid: sellerid});
+    review.text = text;
+    review.rating = rating;
+    review.orderid = orderid;
+    await review.save();
+    return await review
 
+};
 
 exports.updateOrderState = async function (param) {
 

@@ -23,7 +23,6 @@ exports.routes = async function route(app) {
         }
     });
     app.get("/balance", async function(req, res) {
-
         if (req.user) {
             let btc = await controller.getCurrentBalance(req.user.id)
             if (btc) {

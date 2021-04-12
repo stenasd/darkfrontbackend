@@ -14,6 +14,7 @@ async function modelinit() {
     await models.transactions.sync({alter: true});
     await models.usedAdresses.sync({alter: true});
     await models.ownedTXID.sync({alter: true});
+    await models.reviews.sync({alter: true});
 }
 
 modelinit()
