@@ -1,0 +1,18 @@
+<div>
+    <form action="/sok" method="post">
+        <input type="text" placeholder="Search.." name="search">
+        <button type="submit">Submit</button>
+    </form>
+
+    {{#each data}}
+
+     <img src={{this.image}} width="400" height="400"> 
+     <h1>
+         {{this.titel}}
+     </h1>
+          <h1>
+         {{this.priceBTC}}
+     </h1>
+
+    {{/each}}
+</div>

@@ -22,22 +22,26 @@ exports.creatDispute = async function (orderid, userid, text) {
 }
 exports.getUserProfile = async function (param) {
     let user = await service.getRawUserNick(param)
-    let reviewRes = await service.getReviews(user.id)
-    let reviews = await Promise.all(reviewRes.map(async function (param) {
+    if (await user) {
+        let reviewRes = await service.getReviews(user.id)
+        let reviews = await Promise.all(reviewRes.map(async function (param) {
+            let returnobject = {
+                text: param.text,
+                rating: param.rating
+            }
+            return await returnobject
+        }))
         let returnobject = {
-            text: param.text,
-            rating: param.rating
+            wonDisputes: user.wonDisputes,
+            lostDisputes: user.lostDisputes,
+            disc: user.disc,
+            rating: user.rating,
+            ratingNr: user.ratingNr,
+            nick: user.nick,
+            reviews: reviews
         }
         return await returnobject
-    }))
-    let returnobject = {
-        wonDisputes:user.wonDisputes,
-        lostDisputes:user.lostDisputes,
-        disc:user.disc,
-        rating:user.rating,
-        ratingNr:user.ratingNr,
-        nick:user.nick,
-        reviews:reviews
     }
-    return await returnobject
+    return false
+
 }

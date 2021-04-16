@@ -1,0 +1,18 @@
+<div>
+    <img src={{data.image}} width="400" height="400">
+    <form action={{data.postadress}} method="post">
+        {{#each data.products}}
+            <h1>
+                {{this.name}}
+            </h1>
+            <h1>
+                {{this.price}}
+            </h1>
+            <h1>
+                 {{this.id}}
+            </h1>
+            <input type="text" placeholder="buy" name={{this.id}}>+0
+        {{/each}}
+        <button type="submit">Submit</button>
+    </form>
+</div>

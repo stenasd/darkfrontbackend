@@ -27,7 +27,6 @@ exports.route = async function route(app) {
     app.use(passport.initialize());
     app.use(passport.session());
     app.post('/logout', function(req, res) {
-
         req.session.destroy(function(err) {
             res.redirect('/');
         });

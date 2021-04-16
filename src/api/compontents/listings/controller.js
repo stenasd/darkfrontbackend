@@ -22,7 +22,9 @@ exports.getAllListings = async function () {
     }))
 }
 exports.updateRedis = async function () {
-    return await updateCache();
+    client.flushdb( function (err, succeeded) {
+        updateCache();
+    });
 }
 async function updateCache() {
     console.log("updateing cache")
@@ -115,6 +117,22 @@ exports.creatListing = async function (insertobject, user, productParam, imagePa
     
 };
 exports.creatOrder = async function (param, user) {
+
+
+    let arr = await getProductPrices(param)
+    var orderprice = arr.reduce(function(a, b) { return a + b; }, 0);
+    let usermoney = await service.getRawUserId(user.id)
+    let btc = usermoney.btc - orderprice
+    console.log(btc);
+    if (btc >= 0) {
+        console.log("succ");
+        usermoney = { id: usermoney.id, btc: btc }
+        service.updateUser(usermoney)
+    } else {
+        console.log("fail");
+        return false
+    }
+
     let chatroom = uuidv4();
     let product = await service.getProduct(param[0].productid)
     let obj = {
@@ -129,7 +147,6 @@ exports.creatOrder = async function (param, user) {
         userid: user.id,
         orderid: returnOrder.id
     })
-    let orderprice = 0
     param.forEach(async (product) => {
         //adds addproductinorder tanble
         let prodInorder = {
@@ -138,18 +155,14 @@ exports.creatOrder = async function (param, user) {
             quant: product.quant
         }
         let prodprice = await service.getProduct(product.productid)
-        orderprice = orderprice + prodprice.price * product.quant
         let a = await service.addProductInOrder(prodInorder)
     });
-    let usermoney = await service.getRawUserId(user.id)
-    let btc = usermoney.btc - orderprice
-    if (btc >= 0) {
-        usermoney = { id: usermoney.id, btc: btc }
-        service.updateUser(usermoney)
-        return true;
-    } else {
-        return false
-    }
+}
+async function getProductPrices(param){
+    return Promise.all(param.map(async function (product) {
+        let prodprice = await service.getProduct(product.productid)
+        return prodprice.price * product.quant
+    }))
 }
  function checkLenghtName(param) {
 
