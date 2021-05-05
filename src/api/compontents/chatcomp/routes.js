@@ -28,13 +28,12 @@ exports.chat = async function chat(app, io) {
       res.status(400)
       return
     }
-    
     let state = await controller.checkOrderBuyer(req.body.orderid, req.user.id)
     if (state == 1) {
       let foo = { id: req.body.orderid, orderstate: 2 }
       let respon = await controller.updateState(foo)
       if (respon) {
-        controller.updateReviews(req.body.orderid, req.body.rating,req.body.text)
+        controller.updateReviews(req.body.orderid, req.body.rating, req.body.text)
         res.status(200)
       }
     }
@@ -73,113 +72,79 @@ exports.chat = async function chat(app, io) {
     //Updates order state to 1
     //req orderid and userid veify that is seller and can change tis orderid
   });
-  app.post('/chatImage', upload.single('file'), async function (req, res) {
+
+
+  app.get("/sordar", async function (req, res) {
+    let getallroomns = await controller.getChatsSel(req.user.id)
+    let index = 0;
+    getallroomns.forEach(element => {
+      Object.assign(getallroomns[index], { postadress: "/order/" + element.orderID })
+      index++;
+    });
+    res.render('orders', { data: getallroomns })
+  });
+  app.get("/kordrar", async function (req, res) {
+    let getallroomns = await controller.getChats(req.user.id)
+    let index = 0;
+    getallroomns.forEach(element => {
+      Object.assign(getallroomns[index], { postadress: "/order/" + element.orderID })
+      index++;
+    });
+    res.render('orders', { data: getallroomns })
+  });
+  app.get("/order/:tagId", async function (req, res) {
     if (typeof req.user === 'undefined') {
       console.log("orderSent user failed");
       res.status(400)
       return
     }
-    const imagePath = path.join('./images');
-    const fileUpload = new Resize(imagePath);
-    if (!req.file) {
-      res.status(400).json({ error: 'Please provide an image' });
+    if (await controller.checkOrderBuyer(req.params.tagId, req.user.id) >= 0
+      || await controller.checkOrderSeller(req.params.tagId, req.user.id) >= 0) {
+      let getallroomns = await controller.getOrder(req.params.tagId, req.user.id)
+      if (getallroomns.orderstate == 0) {
+        Object.assign(getallroomns, { a0: true })
+      }
+      if (getallroomns.orderstate == 1) {
+        Object.assign(getallroomns, { a1: true })
+      }
+      if (getallroomns.orderstate == 2) {
+        Object.assign(getallroomns, { a2: true })
+      }
+      Object.assign(getallroomns, { postadress: "/order/" + req.params.tagId })
+      console.log(getallroomns);
+      res.render("order", { data: getallroomns })
       return
     }
-    const filename = await fileUpload.save(req.file.buffer);
-    let chatroom = await controller.getRoomWhereOrderID(req.body.orderid)
-    if (filename) {
+    res.status(400)
+  });
+  app.post('/order/:tagId', upload.single('file'), async function (req, res) {
+    if (typeof req.user === 'undefined') {
+      console.log("orderSent user failed");
+      res.status(400)
+      return
+    }
+    if (await controller.checkOrderBuyer(req.params.tagId, req.user.id) >= 0
+      || await controller.checkOrderSeller(req.params.tagId, req.user.id) >= 0) {
+      let filename
+      if (req.file) {
+        const imagePath = path.join('./images');
+        const fileUpload = new Resize(imagePath);
+        filename = await fileUpload.save(req.file.buffer);
+        filename = "/" + filename
+      }
+      let chatroom = await controller.getRoomWhereOrderID(req.params.tagId)
       let savemessage = {
-        text: "testimage",
-        image: filename,
+        text: req.body.text,
+        image: await filename,
         name: req.user.nick,
         roomid: chatroom.roomid,
         userid: req.user.id
       }
-      if (await controller.checkOrderBuyer(req.body.orderid, req.user.id) >= 0
-        || await controller.checkOrderSeller(req.body.orderid, req.user.id) >= 0) {
-        controller.saveMessage(savemessage)
-        let returnmessage = {
-          text: req.body.text,
-          image: filename,
-          name: req.user.nick,
-          orderid: req.body.orderid
-        }
-        io.to(chatroom.roomid).emit('msg', returnmessage);
+      let a = await controller.saveMessage(savemessage)
+      if (a) {
+        res.redirect("/order/" + req.params.tagId)
       }
-      //io.sockets.in(chatroom.roomid).emit('msg', savemessage);
     }
-  });
 
-  app.get("/activeRooms", async function (req, res) {
-
-    let getallroomns = await controller.getChats(req.user.id)
-
-    res.status(200).json(getallroomns);
-  });
-
-  app.get("/getChat", async function (req, res) {
-    let getallroomns = await controller.getOrder(req.query.listingID, req.user.id)
-    res.status(200).json([getallroomns]);
-
-  });
-
-
-  app.get("/activeRoomsSeller", async function (req, res) {
-
-    let getallroomns = await controller.getChatsSel(req.user.id)
-
-    res.status(200).json(getallroomns);
-  });
-  io.on('connection', (socket) => {
-    console.log("chatjoin");
-    socket.on('disconnect', function () {
-
-    });
-
-    socket.on('auth', async function (msg) {
-      console.log("auth");
-      console.log(msg);
-      let sessobj = await controller.verifysession(msg[0])
-      if (sessobj) {
-        let chatroom = await controller.getRoomWhereOrderID(msg[1].orderid)
-        socket.join(chatroom.roomid);
-      }
-      //socket.broadcast.emit('msg', returnmessage);
-    });
-
-    socket.on('chat message', async function (msg) {
-      console.log("CHATMSG");
-      console.log(msg);
-      if (!msg[0]) return;
-      let sessobj = await controller.verifysession(msg[0])
-      if (sessobj) {
-        if (isNaN(msg[1].orderid)) {
-          return
-        }
-        let chatroom = await controller.getRoomWhereOrderID(msg[1].orderid)
-        let returnmessage = {
-          text: msg[1].text,
-          name: sessobj.nick,
-          orderid: msg[1].orderid
-        }
-        let savemessage = {
-          text: msg[1].text,
-          name: sessobj.nick,
-          roomid: chatroom.roomid,
-          userid: sessobj.id
-        }
-        console.log("checksell");
-        console.log(await controller.checkOrderSeller(msg[1].orderid, sessobj.id));
-        if (await controller.checkOrderBuyer(msg[1].orderid, sessobj.id) >= 0
-          || await controller.checkOrderSeller(msg[1].orderid, sessobj.id) >= 0) {
-          controller.saveMessage(savemessage)
-          io.to(chatroom.roomid).emit('msg', returnmessage);
-        }
-        //socket.broadcast.emit('msg', returnmessage);
-      }
-    });
-    socket.on('disconnect', function () {
-
-    });
   });
 };

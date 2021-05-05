@@ -1,4 +1,7 @@
 <div>
+    <form action="/logout" method="post">
+        <input type="submit" value="logga ut" />
+    </form>
     <h1>{{nick}}</h1>
     <h1>{{ratingNr}}</h1>
     <h1>{{rating}}</h1>
@@ -7,8 +10,8 @@
     <h1>{{lostDisputes}}</h1>
     <h1>ratings:</h1>
     {{#each reviews}}
-        <h1>
-            {{this.text}} {{this.rating}}
-        </h1>
+    <h1>
+        {{this.text}} {{this.rating}}
+    </h1>
     {{/each}}
 </div>

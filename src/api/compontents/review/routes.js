@@ -39,40 +39,39 @@ exports.routes = async function route(app) {
     });*/
     app.get("/", async function (req, res) {
         if (typeof req.user === 'undefined') {
-            res.render("home",{test:"asd"});
+            res.render("home", { test: "asd" });
             return
         }
         if (req.user) {
             let respon = await controller.getUserProfile(req.user.nick)
             if (respon) {
-                console.log(respon);
-                Object.assign(respon,{btc:5})
-                res.render("profile",respon)
+
+                Object.assign(respon, { btc: 5 })
+                res.render("profile", respon)
             }
         } else {
-            res.render("home",{test:"asd"});
+            res.render("home", { test: "asd" });
         }
     });
 
-    app.get('/u/:tagId', async function(req, res) {
-        console.log(req.params.tagId);
-        if(!req.params.tagId){
+    app.get('/u/:tagId', async function (req, res) {
+        if (!req.params.tagId) {
             return
         }
         if (typeof req.user === 'undefined') {
-            res.render("home",{test:"asd"});
+            res.render("home", { test: "asd" });
             return
         }
         if (req.user) {
             let respon = await controller.getUserProfile(req.params.tagId)
             if (respon) {
-                console.log(respon);
-                res.render("profile",respon)
+
+                res.render("profile", respon)
             }
         } else {
-            res.render("home",{test:"asd"});
+            res.render("home", { test: "asd" });
         }
-      });
+    });
 
     app.post("/createDispute", async function (req, res) {
         if (typeof req.user === 'undefined') {

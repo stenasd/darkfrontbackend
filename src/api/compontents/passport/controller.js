@@ -21,22 +21,48 @@ exports.getUserFromId = async function (id) {
     return await service.getRawUserId(id)
 }
 
+exports.getUserProfile = async function (param) {
+    let user = await service.getRawUserNick(param)
+    if (await user) {
+        let reviewRes = await service.getReviews(user.id)
+        let reviews = await Promise.all(reviewRes.map(async function (param) {
+            let returnobject = {
+                text: param.text,
+                rating: param.rating
+            }
+            return await returnobject
+        }))
+        let returnobject = {
+            wonDisputes: user.wonDisputes,
+            lostDisputes: user.lostDisputes,
+            disc: user.disc,
+            rating: user.rating,
+            ratingNr: user.ratingNr,
+            nick: user.nick,
+            reviews: reviews
+        }
+        return await returnobject
+    }
+    return false
 
+}
 exports.signup = async function (obj) {
-    console.log(obj);
     let dupname = await findDuplicateUse(obj.name)
     let dupnick = await findDuplicateNick(obj.nick)
+    let passduplicate = false;
     let passlenght = await checkLenght(obj.pass)
     let nameLenght = await checkLenght(obj.name)
     let nickLenght = await checkLenght(obj.nick)
+    if (obj.pass != obj.pass2) {
+        passduplicate = true
+    }
     let resobj = {
         duplname: dupname, duplnick: dupnick, passlenght: passlenght,
-        nameLenght: nameLenght, nickLenght: nickLenght,
+        nameLenght: nameLenght, nickLenght: nickLenght, passduplicate,
         succ: false
     }
-    console.log(resobj);
-    if (dupname || dupnick || passlenght || nameLenght || nickLenght) {
-        console.log("failed signup");
+    if (dupname || dupnick || passlenght || nameLenght || nickLenght || passduplicate) {
+
         return resobj
     }
     let creatuser = await service.creatUser(obj)
@@ -59,8 +85,6 @@ async function findDuplicateNick(nick) {
     } else { return false }
 }
 function checkLenght(param) {
-
-    console.log(param.length)
     if (3 > param.length) {
         console.log("toshort");
         return true

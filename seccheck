@@ -60,3 +60,18 @@ view profile:
 
 POC test:
     all review and dispute stuff
+
+
+handlebars routes
+    /annons/:tagId
+    /annonser
+    /search/:tagId
+    /sok7
+    /u/:tagId
+
+#reprogram todo
+    chat 
+    order
+    disputes
+    signup
+    creatorder

@@ -75,7 +75,6 @@ exports.creatListing = async function (insertobject, user, productParam, imagePa
     //verify seller
     //service.creatInListing()
     let data = { name: insertobject.titel, sellerid: user.id, image: imagePath, text: insertobject.text }
-
     let nameLenght = checkLenghtName(data.name)
     let textLenght = checkLenghtText(data.text)
     let produktLenght = false
@@ -91,13 +90,10 @@ exports.creatListing = async function (insertobject, user, productParam, imagePa
             produktLenght = true
         }
     });
-
     if (await nameLenght || await textLenght || await produktLenght) {
         console.log("failed creatListing controller");
         return false
     }
-
-
     let createdListing = await service.creatListing(data)
     if (!createdListing) { return false }
     const prodarra = await Promise.all(productParam.map(async (prod) => {
@@ -117,8 +113,6 @@ exports.creatListing = async function (insertobject, user, productParam, imagePa
     
 };
 exports.creatOrder = async function (param, user) {
-
-
     let arr = await getProductPrices(param)
     var orderprice = arr.reduce(function(a, b) { return a + b; }, 0);
     let usermoney = await service.getRawUserId(user.id)
@@ -132,7 +126,6 @@ exports.creatOrder = async function (param, user) {
         console.log("fail");
         return false
     }
-
     let chatroom = uuidv4();
     let product = await service.getProduct(param[0].productid)
     let obj = {
@@ -157,6 +150,7 @@ exports.creatOrder = async function (param, user) {
         let prodprice = await service.getProduct(product.productid)
         let a = await service.addProductInOrder(prodInorder)
     });
+    return true
 }
 async function getProductPrices(param){
     return Promise.all(param.map(async function (product) {

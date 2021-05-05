@@ -71,6 +71,7 @@ exports.getAllRoomsWhereUserId = async function(obj) {
     return await service.getAllRoomsWhereUserId(obj)
 }
 exports.getOrder = async function(orderid, senderID) {
+    console.log(orderid + " "+ senderID);
     let order = await service.getOrderWhereOrderID(orderid)
     let getProductsInOrder = await service.getProductsInOrder(orderid)
     let prodInOrder = await Promise.all(getProductsInOrder.map(async function(param) {
