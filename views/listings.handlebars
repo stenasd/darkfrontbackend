@@ -1,23 +1,31 @@
-<div>
-    <form action="/sok" method="post">
-        <input type="text" placeholder="Search.." name="search">
-        <button type="submit">Submit</button>
-    </form>
-    <div class="grid-container">
-        {{#each data}}
-        <div class="grid-item">
-            <img src={{this.image}} width="400" height="400">
+<div class="grid-container">
+        <form action="/sok" method="post">
+                <input type="text" placeholder="sök efter..." name="search" class="grid-search">
+        </form>
+    {{#each data}}
+    <div class="grid-item">
+        <img src={{this.image}} width="400" height="400">
+        <a href={{this.ladress}}>
             <div class="grid-name ">
                 <h4>
                     {{this.titel}}
                 </h4>
             </div>
-            <div class="grid-price ">
-                <h4>
-                    {{this.priceBTC}}
-                </h4>
-            </div>
+        </a>
+        <div class="grid-price ">
+            <h4>
+                {{this.priceBTC}} btc
+            </h4>
         </div>
-        {{/each}}
+
+        <div class="grid-nick">
+            <a href={{this.uadress}}>
+                <h4>
+                    {{this.rating}}
+                    {{this.sellernick}}
+                </h4>
+            </a>
+        </div>
     </div>
+    {{/each}}
 </div>

@@ -4,21 +4,21 @@ const verifyer = require('../../securityUtil')
 exports.updateState = async function(obj) {
     return await service.updateOrderState(obj)
 }
-exports.updateReviews = async function(orderid, rating,text) {
+exports.updateReviews = async function(orderid, rating, text) {
     let order = await service.getRoomWhereOrderID(orderid)
     let user = await service.getRawUserId(order.sellerid)
     if (rating > 5) {
         return false;
     }
-    if (rating < 0){
+    if (rating < 0) {
         return false
     }
-    if(!text){
+    if (!text) {
         return false
     }
     let currentscore = user.rating
     let numberOfRatings = user.ratingNr
-    //typecheck here
+        //typecheck here
     if (numberOfRatings == 0) {
         currentscore = rating
         numberOfRatings = 1
@@ -28,7 +28,7 @@ exports.updateReviews = async function(orderid, rating,text) {
         numberOfRatings++;
         currentscore = a / numberOfRatings
     }
-    service.insertReview(rating,text,order.sellerid,orderid)
+    service.insertReview(rating, text, order.sellerid, orderid)
     return await service.updateReview({ rating: currentscore, ratingNr: numberOfRatings, id: user.id })
 }
 
@@ -71,7 +71,6 @@ exports.getAllRoomsWhereUserId = async function(obj) {
     return await service.getAllRoomsWhereUserId(obj)
 }
 exports.getOrder = async function(orderid, senderID) {
-    console.log(orderid + " "+ senderID);
     let order = await service.getOrderWhereOrderID(orderid)
     let getProductsInOrder = await service.getProductsInOrder(orderid)
     let prodInOrder = await Promise.all(getProductsInOrder.map(async function(param) {
@@ -85,7 +84,12 @@ exports.getOrder = async function(orderid, senderID) {
     let chathistory = await service.getAllMsgInRoom(order.roomid)
     let chatHistory = Promise.all(chathistory.map(async function(param1) {
         let user = await service.getRawUserId(param1.userid)
+        let seller = false
+        if (order.sellerid == param1.userid) {
+            seller = true
+        }
         let returnmessage = {
+            seller: seller,
             text: param1.text,
             image: param1.image,
             name: user.nick,
@@ -93,6 +97,7 @@ exports.getOrder = async function(orderid, senderID) {
         }
         return returnmessage
     }))
+    chathistory = (await chatHistory).reverse()
     let seller = await service.getRawUserId(order.sellerid)
     let buyer = await service.getRawUserId(order.userid)
     let isSeller = false
@@ -133,7 +138,8 @@ exports.getChats = async function(userid) {
                 text: param1.text,
                 image: param1.image,
                 name: user.nick,
-                date: param1.createdAt
+                date: param1.createdAt,
+                url: "/u/" + user.nick
             }
             return returnmessage
         }))
@@ -207,12 +213,10 @@ exports.getChatsSel = async function(userid) {
 }
 
 exports.checkOrderBuyer = async function(orderid, userid) {
-    if(!orderid)
-    {
+    if (!orderid) {
         return false
     }
-    if(!userid)
-    {
+    if (!userid) {
         return false
     }
     // return true if buyer can do buyer
@@ -225,12 +229,10 @@ exports.checkOrderBuyer = async function(orderid, userid) {
     return false
 }
 exports.checkOrderSeller = async function(orderid, userid) {
-    if(!orderid)
-    {
+    if (!orderid) {
         return false
     }
-    if(!userid)
-    {
+    if (!userid) {
         return false
     }
     // return true if seller can do sell stuff

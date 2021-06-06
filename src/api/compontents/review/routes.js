@@ -37,7 +37,7 @@ exports.routes = async function route(app) {
             res.status(400).json({ error: "invalid user" });
         }
     });*/
-    app.get("/", async function (req, res) {
+    app.get("/", async function(req, res) {
         if (typeof req.user === 'undefined') {
             res.render("home", { test: "asd" });
             return
@@ -54,7 +54,7 @@ exports.routes = async function route(app) {
         }
     });
 
-    app.get('/u/:tagId', async function (req, res) {
+    app.get('/u/:tagId', async function(req, res) {
         if (!req.params.tagId) {
             return
         }
@@ -66,14 +66,14 @@ exports.routes = async function route(app) {
             let respon = await controller.getUserProfile(req.params.tagId)
             if (respon) {
 
-                res.render("profile", respon)
+                res.render("user", respon)
             }
         } else {
             res.render("home", { test: "asd" });
         }
     });
 
-    app.post("/createDispute", async function (req, res) {
+    app.post("/createDispute", async function(req, res) {
         if (typeof req.user === 'undefined') {
             res.status(400);
         }

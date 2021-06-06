@@ -1,0 +1,28 @@
+<div class="login-block">
+    {{#if data.succ}}
+        <h1> Konto skapad</h1>
+    {{else}}
+        {{#if data.duplname}}
+           <h4>användarnamn redan taget</h4>
+        {{/if}}
+        {{#if data.duplnick}}
+            <h4>smeknamn redan taget</h4>
+        {{/if}}
+        {{#if data.passduplicate}}
+            <h4>lösenord matchar inte</h4>
+        {{/if}}
+            <form action="/signup" method="post">
+                <label>username:</label>
+                <input type="text" min="0" max="25" name="name" required /><br />
+
+                <label>nick:</label>
+                <input type="text" min="0" max="25" name="nick" required /><br />
+
+                <label>pass:</label>
+                <input type="password" min="0" max="25" name="pass" required />
+                <label>pass2</label>
+                <input type="password" min="0" max="25" name="pass2" required />
+                <input type="submit" min="0" max="25" value="submit" required />
+            </form>
+    {{/if}}
+</div>

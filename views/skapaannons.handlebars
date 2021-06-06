@@ -1,0 +1,23 @@
+<div class="login-block">
+    <form method="post" enctype="multipart/form-data" action='/skapaannons'>
+        <div>
+            <label>Annons Titel:</label>
+            <input type="text" name="titel"min="0" max="100"required /><br />
+
+            <label>Annons Text:</label>
+            <input type="text" name="text" min="0" max="500" required/><br />
+            <br />
+            <label>Produkt titel:</label>
+            <input type="text" name="prod1titel" min="0" max="100" required/><br />
+            <label>Produkt pris:</label>
+            <input type="number" name="prod1price"min="0" max="1000000" step="0.01" required/><br />
+            <label for="file">Annons Bild:</label>
+            <input type="file" id="file" name="file" required>
+            <br />
+        </div>
+        <div>
+            <button>Submit</button>
+        </div>
+
+    </form>
+</div>

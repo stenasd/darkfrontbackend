@@ -1,77 +1,13 @@
-Security check list:
+TODO#
+    name in chat
 
-chatcomp
-    All rooms stuff 
-        Services: 
-            service.getAllRoomsWhereSellerId
-            service.getAllMsgInRoom
-            service.getProductsInOrder(
-            service.getproduct(param.productid)
-            service.getRawUserId(param1.userid)
-        
-    Socketmessg stuff
-        Not leaking chat uuid 
-        String size check
-        service.saveMessage(obj)
+    timestamp in chat
+    mystery line in chat
+    send and review design
+    upload multile images listing
+    user table with trust data
+    buyorder table sell table scrollable
+    listings in userprofile
 
-listings
-    service.creatListing
-    service.creatProduct    
-    service.creatInListing
-    service.creatOrder
-    service.addInRoom
-
-passport:
-    session cookie settings
-
-todo#
-    #leave text review
-    view seller profile view text reviews //backenddone now frontend
-    disputes//need backend test and frontend integ
-
-    add time checking cronjobs and when dispute is possible
-    login redirect based on javascript or nonjavascript
-    buyorder respons
-    btc transaction Security
-    seller score on listings
-    returning correct error from controllers
-    whipe all seller data if ref is incorrect
-    add and update user disc
-    admin dispute and refcode handler
-
-lowprioTODO#
-    nojavascript frontend
-    #poc onion service
-    dos mitigation
-    lazy save redis listings
-
-dont leak credentials:
-userid
-roomid
-refcode
-anybtc stuff
-
-
-view profile:
-    add profile text 
-    and review table 
-    with score and text and userid
-
-
-POC test:
-    all review and dispute stuff
-
-
-handlebars routes
-    /annons/:tagId
-    /annonser
-    /search/:tagId
-    /sok7
-    /u/:tagId
-
-#reprogram todo
-    chat 
-    order
-    disputes
-    signup
-    creatorder
+DONE#
+    

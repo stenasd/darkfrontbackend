@@ -1,0 +1,83 @@
+<!-- 
+    #DONE css grid with clear borders 2h
+    #DONE add nicknames and message time format 15min
+    #TODO pgp spoiler or message is over 
+    #TODO Current order status bar
+    #DONE textarea input 15min
+    #DONE upload button
+    #DONE Color marking for seller buyer or admin 15min
+-->
+<div class="chat-parrent">
+    <nav>
+        <ul>
+            {{#each data.messages}}
+            <div class="chat-cont">
+                <div class="chat-name">
+                    {{#if this.seller}}
+                    <h4>seller:{{this.name}}</h4>
+                    {{else}}
+                    <h4>buyer: {{this.name}}</h4>
+                    {{/if}}
+                </div>
+                <div class="chat-date">
+                    <p>{{this.date}}</p>
+                </div>
+                <div class="chat-text">
+                    <p>{{this.text}}</p>
+
+
+                    {{#if this.image}}
+                    <img src={{this.image}} width="400" height="400">
+                    {{/if}}
+                </div>
+            </div>
+            {{/each}}
+        </ul>
+    </nav>
+    <div class="chat-send">
+        <form action={{data.postadress}} method="post" enctype="multipart/form-data" id="usrform">
+            <div class="chat-form">
+                <textarea rows="4" cols="50" name="text" form="usrform"></textarea>
+                <div class="chat-file">
+                    <label for="file">Ladda up bild</label>
+                    <input type="file" id="file" name="file">
+                </div>
+                <input type="submit" value="skicka" />
+            </div>
+        </form>
+
+    </div>
+    <div class="chat-status">
+        {{#if data.a0}}
+        {{#if data.isSeller}}
+
+        <form action={{data.postadressSend}} method="post">
+            <input type="submit" />
+        </form>
+        {{else}}
+        <h4>Vänta på att säljaren ska skicka</h4>
+        {{/if}}
+        {{/if}}
+
+        {{#if data.a1}}
+        {{#if data.seller}}
+        <h4>
+            Väntar på köparens betyg/disputering
+        </h4>
+        {{else}}
+        <form action={{data.postadress}} method="post">
+            <input type="text" max="150" name="text" />
+            <input type="number" min="1" max="5" name="rating" />
+            <button>betygsätt</button>
+        </form>
+        {{/if}}
+        {{/if}}
+        {{#if data.a2}}
+        {{#if data.seller}}
+        <h4>
+            Order Avslutad
+        </h4>
+        {{/if}}
+        {{/if}}
+    </div>
+</div>

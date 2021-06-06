@@ -94,7 +94,7 @@ const messages = sequelize.define('messages', {
         type: DataTypes.INTEGER,
     },
     text: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
     },
     image: {
         type: DataTypes.STRING,
@@ -116,8 +116,7 @@ const refkey = sequelize.define('refkey', {
     referalcode: {
         type: DataTypes.STRING,
     }
-}, {
-});
+}, {});
 
 exports.refkey = refkey;
 
@@ -181,13 +180,12 @@ const listings = sequelize.define('listings', {
         type: DataTypes.STRING,
     },
     text: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
     },
     image: {
         type: DataTypes.STRING
     }
-}, {
-});
+}, {});
 exports.listings = listings
 const inListing = sequelize.define('inListing', {
     // Model attributes are defined here
@@ -273,8 +271,7 @@ const transactions = sequelize.define('transactions', {
         //0 deposit 1 withdraw
         type: DataTypes.STRING
     },
-}, {
-});
+}, {});
 exports.transactions = transactions
 
 const reviews = sequelize.define('reviews', {
@@ -291,8 +288,7 @@ const reviews = sequelize.define('reviews', {
     rating: {
         type: DataTypes.INTEGER
     },
-}, {
-});
+}, {});
 exports.reviews = reviews
 
 const disputes = sequelize.define('disputes', {
@@ -302,7 +298,5 @@ const disputes = sequelize.define('disputes', {
     text: {
         type: DataTypes.STRING
     },
-}, {
-});
+}, {});
 exports.disputes = disputes
-
