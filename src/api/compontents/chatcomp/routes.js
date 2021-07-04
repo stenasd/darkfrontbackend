@@ -11,30 +11,30 @@ const upload = multer({
         fileSize: 4 * 1024 * 1024,
     }
 });
-//TODO combine sorder and k order
+//[ ] 2 combine sorder and k order
 exports.chat = async function chat(app, io) {
-    app.post("/addreview", async function(req, res) {
+    app.post("/addreview/:tagId", async function(req, res) {
         if (typeof req.user === 'undefined') {
             console.log("addreview user failed");
             res.status(400)
             return
         }
-        if (typeof req.body.orderid === 'undefined') {
+        if (typeof req.params.tagId === 'undefined') {
             console.log("addreview orderid failed");
             res.status(400)
             return
         }
-        if (isNaN(req.body.orderid)) {
+        if (isNaN(req.params.tagId)) {
             console.log("addreview orderid failed NaN");
             res.status(400)
             return
         }
-        let state = await controller.checkOrderBuyer(req.body.orderid, req.user.id)
+        let state = await controller.checkOrderBuyer(req.params.tagId, req.user.id)
         if (state == 1) {
-            let foo = { id: req.body.orderid, orderstate: 2 }
+            let foo = { id: req.params.tagId, orderstate: 2 }
             let respon = await controller.updateState(foo)
             if (respon) {
-                controller.updateReviews(req.body.orderid, req.body.rating, req.body.text)
+                controller.updateReviews(req.params.tagId, req.body.rating, req.body.text)
                 res.status(200)
             }
         }
@@ -42,30 +42,31 @@ exports.chat = async function chat(app, io) {
         res.status(400)
     });
 
-    app.post("/orderSent", async function(req, res) {
+    app.post("/orderSent/:tagId", async function(req, res) {
+        console.log("ordersent")
         if (typeof req.user === 'undefined') {
             console.log("orderSent user failed");
             res.status(400)
             return
         }
-
-        if (typeof req.body.orderid === 'undefined') {
+        if (typeof req.params.tagId === 'undefined') {
             console.log("orderSent orderid failed");
             res.status(400)
             return
         }
 
-        if (isNaN(req.body.orderid)) {
+        if (isNaN(req.params.tagId)) {
             console.log("orderSent orderid failed NaN");
             res.status(400)
             return
         }
 
-        let state = await controller.checkOrderSeller(req.body.orderid, req.user.id)
+        let state = await controller.checkOrderSeller(req.params.tagId, req.user.id)
         if (state == 0) {
-            let respon = await controller.updateState({ id: req.body.orderid, orderstate: 1 })
+            let respon = await controller.updateState({ id: req.params.tagId, orderstate: 1 })
             if (respon) {
-                res.status(200)
+                res.redirect("/order/" + req.params.tagId)
+                return
             }
         }
         console.log("orderSent controller fail");
@@ -110,7 +111,8 @@ exports.chat = async function chat(app, io) {
             if (getallroomns.orderstate == 2) {
                 Object.assign(getallroomns, { a2: true })
             }
-            Object.assign(getallroomns, { postadress: "/order/" + req.params.tagId })
+            Object.assign(getallroomns, { postadress: "/order/" + req.params.tagId, postadressSend: "/orderSent/" + req.params.tagId })
+            console.log(getallroomns.postadress)
             res.render("order", { data: getallroomns })
             return
         }

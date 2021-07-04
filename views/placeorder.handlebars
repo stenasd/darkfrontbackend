@@ -1,17 +1,37 @@
 <div>
+    <div class="grid-container">
+        <table>
+            <tr>
+                <td>namn:</td>
+                <td>{{data.nick}}</td>
+            </tr>
+            <tr>
+                <td>betyg:</td>
+                <td>{{data.rating}}/5 ({{data.ratingNr}})</td>
+            </tr>
+            <tr>
+                <td>disput:</td>
+                <td>{{data.wonDisputes}}/{{data.lostDisputes}}</td>
+            </tr>
+            <tr>
+                <td>senast aktiv:</td>
+                <td>placeholder</td>
+            </tr>
+        </table>
+    </div>
     <img src={{data.image}} width="400" height="400">
     <form action={{data.postadress}} method="post">
         {{#each data.products}}
-            <h1>
-                {{this.name}}
-            </h1>
-            <h1>
-                {{this.price}}
-            </h1>
-            <h1>
-                 {{this.id}}
-            </h1>
-            <input type="text" placeholder="buy" name={{this.id}}>+0
+        <h1>
+            {{this.name}}
+        </h1>
+        <h1>
+            {{this.price}}
+        </h1>
+        <h1>
+            {{this.id}}
+        </h1>
+        <input type="text" placeholder="buy" name={{this.id}}>+0
         {{/each}}
         <button type="submit">Submit</button>
     </form>

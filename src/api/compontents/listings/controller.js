@@ -71,6 +71,10 @@ exports.getListing = async function(id) {
      return returnparam*/
     let listing = await client.get(id)
     listing = JSON.parse(listing)
+    let a = await service.getRawUserNick(listing.sellernick)
+    let userobj = { nick: a.nick, rating: a.rating, ratingNr: a.ratingNr, wonDisputes: a.wonDisputes, lostDisputes: a.lostDisputes }
+    Object.assign(listing, userobj)
+    console.log(JSON.stringify(listing))
     return await listing
 }
 exports.creatListing = async function(insertobject, user, productParam, imagePath) {

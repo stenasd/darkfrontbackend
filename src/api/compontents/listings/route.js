@@ -5,7 +5,7 @@
 //get roomid and and userid from socket reciver and save messages 
 
 // check if client can accses the room it sends in
-//TODO Category filter and newst/popular/cheap/expensiv
+//TODO 4 Category filter and newst/popular/cheap/expensiv
 const controller = require('./controller');
 const verifyer = require('../../securityUtil')
 const path = require('path');
@@ -216,6 +216,7 @@ exports.routes = async function route(app) {
             return
         }
         resjson.image = "/" + resjson.image
+        console.log(JSON.stringify(resjson))
         res.render("placeorder", { data: resjson });
     });
 

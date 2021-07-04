@@ -1,11 +1,12 @@
 <!-- 
-    #DONE css grid with clear borders 2h
-    #DONE add nicknames and message time format 15min
-    #TODO pgp spoiler or message is over 
-    #TODO Current order status bar
-    #DONE textarea input 15min
-    #DONE upload button
-    #DONE Color marking for seller buyer or admin 15min
+    #[ x ] css grid with clear borders 2h
+    #[ x ] add nicknames and message time format 15min
+    #[ x ] pgp spoiler or message is over 
+    
+    #[ ] 1 open message in new window   use message id to open in new window use same security stuff for it then all other chat 
+    #[ x ] Current order status bar
+    #[ x ] textarea input 15min
+    #[ x ] upload button
 -->
 <div class="chat-parrent">
     <nav>
@@ -51,21 +52,21 @@
         {{#if data.a0}}
         {{#if data.isSeller}}
 
-        <form action={{data.postadressSend}} method="post">
+        <form action={{data.postadressSend}} method="post" style="background-color: rgba(255, 0, 0, 0.301);">
             <input type="submit" />
         </form>
         {{else}}
-        <h4>Vänta på att säljaren ska skicka</h4>
+        <h4 style="background-color: rgba(255, 0, 0, 0.301);">Vänta på att säljaren ska skicka</h4>
         {{/if}}
         {{/if}}
 
         {{#if data.a1}}
         {{#if data.seller}}
-        <h4>
+        <h4 style="background-color: rgba(238, 255, 0, 0.301);">
             Väntar på köparens betyg/disputering
         </h4>
         {{else}}
-        <form action={{data.postadress}} method="post">
+        <form action={{data.postadress}} method="post" style="background-color: rgba(0, 255, 55, 0.301);">
             <input type="text" max="150" name="text" />
             <input type="number" min="1" max="5" name="rating" />
             <button>betygsätt</button>
@@ -74,7 +75,7 @@
         {{/if}}
         {{#if data.a2}}
         {{#if data.seller}}
-        <h4>
+        <h4 style="background-color: rgba(0, 255, 55, 0.301);">
             Order Avslutad
         </h4>
         {{/if}}
